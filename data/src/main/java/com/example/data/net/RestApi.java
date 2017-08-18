@@ -22,7 +22,7 @@ public interface RestApi {
         void onError(Exception e);
     }
 
-    static final String API_BASE_URL = "http://www.android10.org/myapi/";
+    static final String API_BASE_URL = "https://raw.githubusercontent.com/android10/Sample-Data/master/Android-CleanArchitecture/";
     static final String API_URL_GET_USER_LIST = API_BASE_URL + "users.json";
     static final String API_URL_GET_USER_DETAILS = API_BASE_URL + "user_";
 

@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.example.data.entity.UserEntity;
 import com.example.data.entity.mapper.UserEntityJsonMapper;
+import com.example.data.exception.NetworkConnectionException;
 
 import java.util.Collection;
 
@@ -40,8 +41,10 @@ public class RestApiImpl implements RestApi {
 
                 userListCallback.onUserListLoaded(userEntityList);
             } catch (Exception e) {
-//                userListCallback.onError(new Network);
+                userListCallback.onError(new NetworkConnectionException(e.getCause()));
             }
+        } else {
+            userListCallback.onError(new NetworkConnectionException());
         }
     }
 
@@ -62,9 +65,7 @@ public class RestApiImpl implements RestApi {
             } catch (Exception e) {
                 userDetailsCallback.onError(new NetworkConnectionException(e.getCause()));
             }
-        } else {
-            userDetailsCallback.onError(new NetworkConnectionException());
-        }
+        } else userDetailsCallback.onError(new NetworkConnectionException());
     }
 
     private boolean isThereInternetConnection() {
