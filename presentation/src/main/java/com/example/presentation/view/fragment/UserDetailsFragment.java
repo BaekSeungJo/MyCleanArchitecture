@@ -1,5 +1,6 @@
 package com.example.presentation.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,26 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.data.cache.FileManager;
+import com.example.data.cache.UserCache;
+import com.example.data.cache.UserCacheImpl;
+import com.example.data.cache.serializer.JsonSerializer;
+import com.example.data.entity.mapper.UserEntityDataMapper;
+import com.example.data.executor.JobExecutor;
+import com.example.data.repository.UserDataRepository;
+import com.example.data.repository.datasource.UserDataStoreFactory;
+import com.example.domain.executor.PostExecutionThread;
+import com.example.domain.executor.ThreadExecutor;
+import com.example.domain.interactor.GetUserDetailsUseCase;
+import com.example.domain.interactor.GetUserDetailsUseCaseImpl;
+import com.example.domain.repository.UserRepository;
 import com.example.presentation.R;
+import com.example.presentation.UIThread;
+import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
+import com.example.presentation.view.component.AutoLoadImageView;
 
 /**
  * Created by plnc on 2017-06-28.
@@ -26,6 +43,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     private int userId;
     private UserDetailsPresenter userDetailsPresenter;
 
+    private AutoLoadImageView iv_cover;
     private TextView tv_fullname;
     private TextView tv_email;
     private TextView tv_followers;
@@ -54,60 +72,120 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         this.initialize();
     }
 
-    private void initialize() {
-        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
 
-        this.iv_
+        this.iv_cover = (AutoLoadImageView) fragmentView.findViewById(R.id.iv_cover);
+        this.tv_fullname = (TextView) fragmentView.findViewById(R.id.tv_fullname);
+        this.tv_email = (TextView) fragmentView.findViewById(R.id.tv_email);
+        this.tv_followers = (TextView) fragmentView.findViewById(R.id.tv_followers);
+        this.tv_description = (TextView) fragmentView.findViewById(R.id.tv_description);
+        this.rl_progress = (RelativeLayout) fragmentView.findViewById(R.id.rl_progress);
+        this.rl_retry = (RelativeLayout) fragmentView.findViewById(R.id.rl_retry);
+        this.bt_retry = (Button) fragmentView.findViewById(R.id.bt_retry);
+        this.bt_retry.setOnClickListener(this.retryOnClickListener);
+
+        return fragmentView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.userDetailsPresenter.initialize(this.userId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        this.userDetailsPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.userDetailsPresenter.pause();
     }
 
     @Override
     void initializePresenter() {
+        ThreadExecutor threadExecutor = JobExecutor.getInstance();
+        PostExecutionThread postExecutionThread = UIThread.getInstance();
 
+        JsonSerializer userCacheSerializer = new JsonSerializer();
+        UserCache userCache = UserCacheImpl.getInstance(getActivity(), userCacheSerializer, FileManager.getInstance(), threadExecutor);
+        UserDataStoreFactory userDataStoreFactory =
+                new UserDataStoreFactory(this.getContext(), userCache);
+        UserEntityDataMapper userEntityDataMapper = new UserEntityDataMapper();
+        UserRepository userRepository = UserDataRepository.getInstance(userDataStoreFactory, userEntityDataMapper);
+
+        GetUserDetailsUseCase getUserDetailsUseCase = new GetUserDetailsUseCaseImpl(userRepository, threadExecutor, postExecutionThread);
+        UserModelDataMapper userModelDataMapper = new UserModelDataMapper();
+
+        this.userDetailsPresenter =
+                new UserDetailsPresenter(this, getUserDetailsUseCase, userModelDataMapper);
+    }
+
+    @Override
+    public void renderUser(UserModel user) {
+        if (user != null) {
+            this.iv_cover.setImageUrl(user.getCoverUrl());
+            this.tv_fullname.setText(user.getFullName());
+            this.tv_email.setText(user.getEmail());
+            this.tv_followers.setText(user.getFollowers());
+            this.tv_description.setText(user.getDescription());
+        }
     }
 
     @Override
     public void showLoading() {
-
+        this.rl_progress.setVisibility(View.VISIBLE);
+        this.getActivity().setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
     public void hideLoading() {
-
+        this.rl_progress.setVisibility(View.GONE);
+        this.getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
     @Override
     public void showRetry() {
-
+        this.rl_retry.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideRetry() {
-
+        this.rl_retry.setVisibility(View.GONE);
     }
 
     @Override
     public void showError(String message) {
-
+        this.showToastMessage(message);
     }
 
     @Override
-    public void renderUser(UserModel userModel) {
-
+    public Context getContext() {
+        return getActivity().getApplicationContext();
     }
+
+    private void initialize() {
+        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
+    }
+
+    private void loadUserDetails() {
+        if(this.userDetailsPresenter != null) {
+            this.userDetailsPresenter.initialize(this.userId);
+        }
+    }
+
+    private final View.OnClickListener retryOnClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            UserDetailsFragment.this.loadUserDetails();
+        }
+    };
+
 }

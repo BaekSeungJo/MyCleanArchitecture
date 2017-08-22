@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.util.Log;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,7 +23,7 @@ import java.net.URLConnection;
  * Created by plnc on 2017-07-25.
  */
 
-public class AutoLoadImageView extends ImageView {
+public class AutoLoadImageView extends AppCompatImageView {
 
     private static final String BASE_IMAGE_NAME_CACHED = "image_";
 
@@ -115,6 +120,31 @@ public class AutoLoadImageView extends ImageView {
         return bitmap;
     }
 
+    private void cacheBitmap(Bitmap bitmap, String fileName) {
+        if(this.cache != null) {
+            this.cache.put(bitmap, fileName);
+        }
+    }
+
+    private boolean isThereInternetConnection() {
+        boolean isConnected;
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        isConnected = (networkInfo != null && networkInfo.isConnectedOrConnecting());
+
+        return isConnected;
+    }
+
+    private String getFileNameFromUrl(String imageUrl) {
+        String hash = String.valueOf(imageUrl.hashCode());
+        if(hash.startsWith("-")) {
+            hash = hash.substring(1);
+        }
+        return BASE_IMAGE_NAME_CACHED + hash;
+    }
+
     private static class ImageDownloader {
         interface Callback {
             void onImageDownloaded(Bitmap bitmap);
@@ -153,7 +183,7 @@ public class AutoLoadImageView extends ImageView {
 
         private final File cacheDir;
 
-        public DiskCache(File cacheDir) {
+        DiskCache(File cacheDir) {
             this.cacheDir = cacheDir;
         }
 
@@ -166,12 +196,33 @@ public class AutoLoadImageView extends ImageView {
             return bitmap;
         }
 
-        public void evictAll() {
-
+        synchronized void put(Bitmap bitmap, String fileName) {
+            File file = buildFileFromFilename(fileName);
+            if(!file.exists()) {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                } catch (FileNotFoundException e) {
+                    Log.e(TAG, e.getMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
         }
-    }
 
-    private File buildFileFromFilename(String fileName) {
-        String fullPath = this.cacheDir
+        void evictAll() {
+            if(cacheDir.exists()) {
+                for(File file : cacheDir.listFiles()) {
+                    file.delete();
+                }
+            }
+        }
+
+        private File buildFileFromFilename(String fileName) {
+            String fullPath = this.cacheDir.getPath() + File.separator + fileName;
+            return new File(fullPath);
+        }
     }
 }

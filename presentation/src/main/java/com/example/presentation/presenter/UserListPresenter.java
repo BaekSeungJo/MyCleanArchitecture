@@ -4,7 +4,7 @@ import com.example.domain.User;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.GetUserListUseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
-import com.example.presentation.mapper.UserModelMapper;
+import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserListView;
 
@@ -18,15 +18,15 @@ public class UserListPresenter implements Presenter {
 
     private final UserListView userListView;
     private final GetUserListUseCase getUserListUseCase;
-    private final UserModelMapper userModelMapper;
+    private final UserModelDataMapper userModelDataMapper;
 
-    public UserListPresenter(UserListView userListView, GetUserListUseCase getUserListUseCase, UserModelMapper userModelMapper) {
-        if(userListView == null || getUserListUseCase == null || userModelMapper == null) {
+    public UserListPresenter(UserListView userListView, GetUserListUseCase getUserListUseCase, UserModelDataMapper userModelDataMapper) {
+        if(userListView == null || getUserListUseCase == null || userModelDataMapper == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }
         this.userListView = userListView;
         this.getUserListUseCase = getUserListUseCase;
-        this.userModelMapper = userModelMapper;
+        this.userModelDataMapper = userModelDataMapper;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class UserListPresenter implements Presenter {
     }
 
     private void showUsersCollectionView(Collection<User> usersCollection) {
-        final Collection<UserModel> userModelCollection = this.userModelMapper.transform(usersCollection);
+        final Collection<UserModel> userModelCollection = this.userModelDataMapper.transform(usersCollection);
         this.userListView.renderUserList(userModelCollection);
     }
 

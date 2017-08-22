@@ -26,7 +26,7 @@ import com.example.domain.interactor.GetUserListUseCaseImpl;
 import com.example.domain.repository.UserRepository;
 import com.example.presentation.R;
 import com.example.presentation.UIThread;
-import com.example.presentation.mapper.UserModelMapper;
+import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserListPresenter;
 import com.example.presentation.view.UserListView;
@@ -112,9 +112,9 @@ public class UserListFragment extends BaseFragment implements UserListView {
         UserRepository userRepository = UserDataRepository.getInstance(userDataStoreFactory, userEntityDataMapper);
 
         GetUserListUseCase getUserListUseCase = new GetUserListUseCaseImpl(userRepository, threadExecutor, postExecutionThread);
-        UserModelMapper userModelMapper = new UserModelMapper();
+        UserModelDataMapper userModelDataMapper = new UserModelDataMapper();
 
-        this.userListPresenter = new UserListPresenter(this, getUserListUseCase, userModelMapper);
+        this.userListPresenter = new UserListPresenter(this, getUserListUseCase, userModelDataMapper);
     }
 
     @Override

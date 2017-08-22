@@ -11,9 +11,9 @@ import java.util.Collections;
  * Created by plnc on 2017-06-26.
  */
 
-public class UserModelMapper {
+public class UserModelDataMapper {
 
-    public UserModelMapper() {
+    public UserModelDataMapper() {
         // empty
     }
 
