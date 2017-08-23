@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,7 +29,7 @@ import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserListPresenter;
 import com.example.presentation.view.UserListView;
-import com.example.presentation.view.adapter.UserAdapter;
+import com.example.presentation.view.adapter.UsersAdapter;
 
 import java.util.Collection;
 
@@ -56,7 +55,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @BindView(R.id.rl_retry) RelativeLayout rl_retry;
     @BindView(R.id.bt_retry) Button bt_retry;
 
-    private UserAdapter userAdapter;
+    private UsersAdapter userAdapter;
 
     private UserListListener userListListener;
 
@@ -142,7 +141,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     public void renderUserList(Collection<UserModel> userModelCollection) {
         if(userModelCollection != null) {
             if(this.userAdapter == null) {
-                this.userAdapter = new UserAdapter(getActivity(), userModelCollection);
+                this.userAdapter = new UsersAdapter(getActivity(), userModelCollection);
             } else {
                 this.userAdapter.setUsersCollection(userModelCollection);
             }
