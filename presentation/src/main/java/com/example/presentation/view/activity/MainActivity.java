@@ -8,39 +8,30 @@ import android.widget.Button;
 import com.example.presentation.R;
 import com.example.presentation.navigation.Navigator;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends BaseActivity {
 
     private Navigator navigator;
-    private Button btn_LoadData;
+    @BindView(R.id.btn_LoadData) Button btn_LoadData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.mapGUI();
+        ButterKnife.bind(this);
         this.initialize();
-    }
-
-    private void mapGUI() {
-        btn_LoadData = (Button) findViewById(R.id.btn_LoadData);
-        btn_LoadData.setOnClickListener(loadDataOnClickListener);
     }
 
     private void initialize() {
         this.navigator = new Navigator();
     }
 
-    private final View.OnClickListener loadDataOnClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            navigateToUserList();
-        }
-    };
-
-    private void navigateToUserList() {
+    @OnClick(R.id.btn_LoadData)
+    void navigateToUserList() {
         this.navigator.navigateToUserList(this);
     }
-
 }

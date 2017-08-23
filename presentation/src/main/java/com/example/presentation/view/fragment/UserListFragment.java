@@ -34,6 +34,11 @@ import com.example.presentation.view.adapter.UserAdapter;
 
 import java.util.Collection;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+
 /**
  * Created by plnc on 2017-06-27.
  */
@@ -46,10 +51,10 @@ public class UserListFragment extends BaseFragment implements UserListView {
 
     private UserListPresenter userListPresenter;
 
-    private ListView lv_users;
-    private RelativeLayout rl_progress;
-    private RelativeLayout rl_retry;
-    private Button bt_retry;
+    @BindView(R.id.lv_users) ListView lv_users;
+    @BindView(R.id.rl_progress) RelativeLayout rl_progress;
+    @BindView(R.id.rl_retry) RelativeLayout rl_retry;
+    @BindView(R.id.bt_retry) Button bt_retry;
 
     private UserAdapter userAdapter;
 
@@ -71,13 +76,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_list, container, true);
-
-        this.lv_users = (ListView) fragmentView.findViewById(R.id.lv_users);
-        this.lv_users.setOnItemClickListener(this.userOnItemClickListener);
-        this.rl_progress = (RelativeLayout) fragmentView.findViewById(R.id.rl_progress);
-        this.rl_retry = (RelativeLayout) fragmentView.findViewById(R.id.rl_retry);
-        this.bt_retry = (Button) fragmentView.findViewById(R.id.bt_retry);
-        this.bt_retry.setOnClickListener(this.retryOnClickListener);
+        ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
     }
@@ -85,7 +84,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        userListPresenter.initialize();
+        this.loadUserList();
     }
 
     @Override
@@ -174,29 +173,16 @@ public class UserListFragment extends BaseFragment implements UserListView {
         }
     }
 
-    private void onUserClicked(UserModel userModel) {
-        if(this.userListPresenter != null) {
+    @OnClick(R.id.bt_retry)
+    void onButtonRetryClick() {
+        UserListFragment.this.loadUserList();
+    }
+
+    @OnItemClick(R.id.lv_users)
+    void onItemClick(int position) {
+        UserModel userModel = (UserModel) UserListFragment.this.userAdapter.getItem(position);
+        if(this.userListPresenter != null && userModel != null) {
             this.userListPresenter.onUserClicked(userModel);
         }
     }
-
-
-    private final View.OnClickListener retryOnClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            UserListFragment.this.loadUserList();
-        }
-    };
-
-    private final AdapterView.OnItemClickListener userOnItemClickListener = new AdapterView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            UserModel userModel = (UserModel) UserListFragment.this.userAdapter.getItem(position);
-            UserListFragment.this.onUserClicked(userModel);
-        }
-    };
-
-
 }

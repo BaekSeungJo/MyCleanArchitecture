@@ -32,6 +32,10 @@ import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
 import com.example.presentation.view.component.AutoLoadImageView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by plnc on 2017-06-28.
  */
@@ -43,14 +47,14 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     private int userId;
     private UserDetailsPresenter userDetailsPresenter;
 
-    private AutoLoadImageView iv_cover;
-    private TextView tv_fullname;
-    private TextView tv_email;
-    private TextView tv_followers;
-    private TextView tv_description;
-    private RelativeLayout rl_progress;
-    private RelativeLayout rl_retry;
-    private Button bt_retry;
+    @BindView(R.id.iv_cover) AutoLoadImageView iv_cover;
+    @BindView(R.id.tv_fullname) TextView tv_fullname;
+    @BindView(R.id.tv_email) TextView tv_email;
+    @BindView(R.id.tv_followers) TextView tv_followers;
+    @BindView(R.id.tv_description) TextView tv_description;
+    @BindView(R.id.rl_progress) RelativeLayout rl_progress;
+    @BindView(R.id.rl_retry) RelativeLayout rl_retry;
+    @BindView(R.id.bt_retry) Button bt_retry;
 
     public UserDetailsFragment() {
         super();
@@ -76,16 +80,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
-
-        this.iv_cover = (AutoLoadImageView) fragmentView.findViewById(R.id.iv_cover);
-        this.tv_fullname = (TextView) fragmentView.findViewById(R.id.tv_fullname);
-        this.tv_email = (TextView) fragmentView.findViewById(R.id.tv_email);
-        this.tv_followers = (TextView) fragmentView.findViewById(R.id.tv_followers);
-        this.tv_description = (TextView) fragmentView.findViewById(R.id.tv_description);
-        this.rl_progress = (RelativeLayout) fragmentView.findViewById(R.id.rl_progress);
-        this.rl_retry = (RelativeLayout) fragmentView.findViewById(R.id.rl_retry);
-        this.bt_retry = (Button) fragmentView.findViewById(R.id.bt_retry);
-        this.bt_retry.setOnClickListener(this.retryOnClickListener);
+        ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
     }
@@ -93,7 +88,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.userDetailsPresenter.initialize(this.userId);
+        this.loadUserDetails();
     }
 
     @Override
@@ -133,7 +128,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
             this.iv_cover.setImageUrl(user.getCoverUrl());
             this.tv_fullname.setText(user.getFullName());
             this.tv_email.setText(user.getEmail());
-            this.tv_followers.setText(user.getFollowers());
+            this.tv_followers.setText(String.valueOf(user.getFollowers()));
             this.tv_description.setText(user.getDescription());
         }
     }
@@ -180,12 +175,8 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         }
     }
 
-    private final View.OnClickListener retryOnClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            UserDetailsFragment.this.loadUserDetails();
-        }
-    };
-
+    @OnClick(R.id.bt_retry)
+    void onButtonRetryClick() {
+        this.loadUserDetails();
+    }
 }
