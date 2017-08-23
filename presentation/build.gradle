@@ -41,9 +41,11 @@ dependencies {
 
     compile domainLayer
     compile dataLayer
+
+    //library dependencies
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
+    compile 'com.android.support:recyclerview-v7:25.0.+'
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:design:25.2.0'
