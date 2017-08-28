@@ -14,36 +14,84 @@ import com.example.presentation.model.UserModel;
 import java.util.Collection;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by plnc on 2017-06-27.
  */
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
-    @Override
-    public UsersAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onUserItemClicked(UserModel userModel);
     }
 
-    @Override
-    public void onBindViewHolder(UsersAdapter.UserViewHolder holder, int position) {
+    private List<UserModel> usersCollection;
+    private final LayoutInflater layoutInflater;
+
+    public UsersAdapter(Context context, Collection<UserModel> usersCollection) {
+        this.validateUsersCollection(usersCollection);
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.usersCollection = (List<UserModel>) usersCollection;
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return (this.usersCollection != null) ? this.usersCollection.size() : 0;
     }
 
-    static class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public UsersAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = this.layoutInflater.inflate(R.layout.row_user, parent, false);
+        UserViewHolder userViewHolder = new UserViewHolder(view);
 
+        return userViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(UsersAdapter.UserViewHolder holder, int position) {
+        final UserModel userModel = this.usersCollection.get(position);
+        holder.textViewTitle.setText(userModel.getFullName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(UsersAdapter.this.onItemClickListener != null) {
+                    UsersAdapter.this.onItemClickListener.onUserItemClicked(userModel);
+                }
+            }
+        });
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setUsersCollection(Collection<UserModel> usersCollection) {
+        this.validateUsersCollection(usersCollection);
+        this.usersCollection = (List<UserModel>) usersCollection;
+        this.notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    private void validateUsersCollection(Collection<UserModel> usersCollection) {
+        if(usersCollection == null) {
+            throw new IllegalArgumentException("The list cannot be null");
+        }
+    }
+
+    static class UserViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.title) TextView textViewTitle;
 
         public UserViewHolder(View itemView) {
             super(itemView);
-        }
-
-        @Override
-        public void onClick(View v) {
-
+            ButterKnife.bind(this, itemView);
         }
     }
 }

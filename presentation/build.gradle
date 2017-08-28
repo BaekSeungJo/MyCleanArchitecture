@@ -1,16 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+    buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
 
     defaultConfig {
-        applicationId "com.example.plnc.mycleanarchitecture"
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+        applicationId globalConfiguration.getAt("androidApplicationId")
+        versionCode globalConfiguration.getAt("androidVersionCode")
+        versionName globalConfiguration.getAt("androidVersionName")
+        testInstrumentationRunner globalConfiguration.getAt("androidTestInstrumentationRunner")
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     packagingOptions {
@@ -23,16 +30,12 @@ android {
 
     lintOptions {
         abortOnError false;
-        disable 'InvalidPackage' // Some libraries have issues with this.
-        disable 'OldTargetApi' // Lint gives this warning but SDK 20 would be Android L Beta.
-        disable 'IconDensities' // For testing purpose. This is safe to remove.
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder'  //For testing purpose. This is safe to remove.
     }
 
-    buildTypes {
-        release {
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 }
 
 dependencies {
@@ -49,4 +52,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:design:25.2.0'
+    compile 'io.reactivex:rxjava:1.0.3'
+    compile 'io.reactivex:rxandroid:0.23.0'
 }

@@ -3,6 +3,7 @@ package com.example.presentation.view.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserListPresenter;
 import com.example.presentation.view.UserListView;
 import com.example.presentation.view.adapter.UsersAdapter;
+import com.example.presentation.view.adapter.UsersLayoutManager;
 
 import java.util.Collection;
 
@@ -50,12 +52,13 @@ public class UserListFragment extends BaseFragment implements UserListView {
 
     private UserListPresenter userListPresenter;
 
-    @BindView(R.id.lv_users) ListView lv_users;
+    @BindView(R.id.rv_users) RecyclerView rv_users;
     @BindView(R.id.rl_progress) RelativeLayout rl_progress;
     @BindView(R.id.rl_retry) RelativeLayout rl_retry;
     @BindView(R.id.bt_retry) Button bt_retry;
 
     private UsersAdapter userAdapter;
+    private UsersLayoutManager usersLayoutManager;
 
     private UserListListener userListListener;
 
@@ -76,8 +79,14 @@ public class UserListFragment extends BaseFragment implements UserListView {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_list, container, true);
         ButterKnife.bind(this, fragmentView);
+        setupUI();
 
         return fragmentView;
+    }
+
+    private void setupUI() {
+        this.usersLayoutManager = new UsersLayoutManager(getActivity());
+        this.rv_users.setLayoutManager(usersLayoutManager);
     }
 
     @Override
@@ -145,7 +154,8 @@ public class UserListFragment extends BaseFragment implements UserListView {
             } else {
                 this.userAdapter.setUsersCollection(userModelCollection);
             }
-            this.lv_users.setAdapter(userAdapter);
+            this.userAdapter.setOnItemClickListener(onItemClickListener);
+            this.rv_users.setAdapter(userAdapter);
         }
     }
 
@@ -167,21 +177,20 @@ public class UserListFragment extends BaseFragment implements UserListView {
     }
 
     private void loadUserList() {
-        if(this.userListPresenter != null) {
-            this.userListPresenter.initialize();
-        }
+        this.userListPresenter.initialize();
     }
 
-    @OnClick(R.id.bt_retry)
-    void onButtonRetryClick() {
+    @OnClick(R.id.bt_retry) void onButtonRetryClick() {
         UserListFragment.this.loadUserList();
     }
 
-    @OnItemClick(R.id.lv_users)
-    void onItemClick(int position) {
-        UserModel userModel = (UserModel) UserListFragment.this.userAdapter.getItem(position);
-        if(this.userListPresenter != null && userModel != null) {
-            this.userListPresenter.onUserClicked(userModel);
+    private UsersAdapter.OnItemClickListener onItemClickListener =
+            new UsersAdapter.OnItemClickListener() {
+        @Override
+        public void onUserItemClicked(UserModel userModel) {
+            if(UserListFragment.this.userListPresenter != null && userModel != null) {
+                UserListFragment.this.userListPresenter.onUserClicked(userModel);
+            }
         }
-    }
+    };
 }
