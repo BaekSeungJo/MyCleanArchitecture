@@ -12,8 +12,6 @@ import com.example.presentation.view.fragment.UserListFragment;
 
 public class UserListActivity extends BaseActivity implements UserListFragment.UserListListener {
 
-    private Navigator navigator;
-
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, UserListActivity.class);
     }
@@ -23,16 +21,10 @@ public class UserListActivity extends BaseActivity implements UserListFragment.U
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_user_list);
-
-        this.initialize();
     }
 
     @Override
     public void onUserClicked(UserModel userModel) {
         this.navigator.navigateToUserDetails(this, userModel.getUserId());
-    }
-
-    private void initialize() {
-        this.navigator = new Navigator();
     }
 }

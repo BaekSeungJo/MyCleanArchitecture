@@ -12,7 +12,7 @@ android {
         applicationId globalConfiguration.getAt("androidApplicationId")
         versionCode globalConfiguration.getAt("androidVersionCode")
         versionName globalConfiguration.getAt("androidVersionName")
-        testInstrumentationRunner globalConfiguration.getAt("androidTestInstrumentationRunner")
+        testInstrumentationRunner globalConfiguration.getAt("testInstrumentationRunner")
     }
 
     compileOptions {
@@ -46,6 +46,10 @@ dependencies {
     compile dataLayer
 
     //library dependencies
+
+    compile 'com.google.dagger:dagger:2.4'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
+
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.android.support:recyclerview-v7:25.0.+'
