@@ -1,5 +1,7 @@
 package com.example.presentation.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.example.domain.User;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.GetUserListUseCase;
@@ -10,23 +12,28 @@ import com.example.presentation.view.UserListView;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-26.
  */
 
+@Singleton
 public class UserListPresenter implements Presenter {
 
-    private final UserListView userListView;
+    private UserListView userListView;
     private final GetUserListUseCase getUserListUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
-    public UserListPresenter(UserListView userListView, GetUserListUseCase getUserListUseCase, UserModelDataMapper userModelDataMapper) {
-        if(userListView == null || getUserListUseCase == null || userModelDataMapper == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
-        }
-        this.userListView = userListView;
+    @Inject
+    public UserListPresenter(GetUserListUseCase getUserListUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserListUseCase = getUserListUseCase;
         this.userModelDataMapper = userModelDataMapper;
+    }
+
+    public void setView(@NonNull UserListView userListView) {
+        this.userListView = userListView;
     }
 
     @Override

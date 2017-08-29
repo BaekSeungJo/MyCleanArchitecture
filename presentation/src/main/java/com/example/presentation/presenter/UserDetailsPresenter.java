@@ -1,5 +1,7 @@
 package com.example.presentation.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.example.domain.User;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.GetUserDetailsUseCase;
@@ -16,17 +18,17 @@ public class UserDetailsPresenter implements Presenter {
 
     private int userId;
 
-    private final UserDetailsView viewDetailsView;
+    private UserDetailsView viewDetailsView;
     private final GetUserDetailsUseCase getUserDetailsUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
-    public UserDetailsPresenter(UserDetailsView viewDetailsView, GetUserDetailsUseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
-        if(viewDetailsView == null || getUserDetailsUseCase == null || userModelDataMapper == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
-        }
-        this.viewDetailsView = viewDetailsView;
+    public UserDetailsPresenter(GetUserDetailsUseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserDetailsUseCase = getUserDetailsUseCase;
         this.userModelDataMapper = userModelDataMapper;
+    }
+
+    public void setView(@NonNull UserDetailsView viewDetailsView) {
+        this.viewDetailsView = viewDetailsView;
     }
 
     @Override

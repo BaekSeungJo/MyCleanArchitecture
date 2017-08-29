@@ -7,7 +7,6 @@ import android.view.Window;
 
 import com.example.presentation.R;
 import com.example.presentation.model.UserModel;
-import com.example.presentation.navigation.Navigator;
 import com.example.presentation.view.fragment.UserListFragment;
 
 public class UserListActivity extends BaseActivity implements UserListFragment.UserListListener {

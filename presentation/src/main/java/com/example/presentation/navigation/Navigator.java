@@ -7,14 +7,15 @@ import com.example.presentation.view.activity.UserDetailsActivity;
 import com.example.presentation.view.activity.UserListActivity;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by plnc on 2017-06-26.
  */
 
+@Singleton
 public class Navigator {
 
-    @Inject
     public Navigator() {
         // empty
     }

@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.presentation.ActivityComponent;
-import com.example.presentation.ActivityModule;
-import com.example.presentation.DaggerActivityComponent;
+import com.example.presentation.AndroidApplication;
 import com.example.presentation.navigation.Navigator;
 
 import javax.inject.Inject;
@@ -19,17 +17,16 @@ import javax.inject.Inject;
 
 public class BaseActivity extends AppCompatActivity {
 
-    ActivityComponent activityComponent;
     @Inject Navigator navigator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.initializeInjector();
+    }
 
-        this.activityComponent = DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule())
-                .build();
-        this.activityComponent.inject(this);
+    private void initializeInjector() {
+        ((AndroidApplication) getApplication()).inject(this);
     }
 
     protected void addFragment(int containerViewId, Fragment fragment) {

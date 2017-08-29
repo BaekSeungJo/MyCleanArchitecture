@@ -35,6 +35,8 @@ import com.example.presentation.view.adapter.UsersLayoutManager;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,7 +52,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
         void onUserClicked(final UserModel userModel);
     }
 
-    private UserListPresenter userListPresenter;
+    @Inject UserListPresenter userListPresenter;
 
     @BindView(R.id.rv_users) RecyclerView rv_users;
     @BindView(R.id.rl_progress) RelativeLayout rl_progress;
@@ -72,6 +74,17 @@ public class UserListFragment extends BaseFragment implements UserListView {
         if(context instanceof  UserListListener) {
             userListListener = (UserListListener) context;
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.getApplication().inject(this);
+        this.initialize();
+    }
+
+    private void initialize() {
+        this.userListPresenter.setView(this);
     }
 
     @Nullable
@@ -105,23 +118,6 @@ public class UserListFragment extends BaseFragment implements UserListView {
     public void onPause() {
         super.onPause();
         userListPresenter.pause();
-    }
-
-    @Override
-    protected void initializePresenter() {
-        ThreadExecutor threadExecutor = JobExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UIThread.getInstance();
-
-        JsonSerializer userCacheSerializer = new JsonSerializer();
-        UserCache userCache = UserCacheImpl.getInstance(getActivity(), userCacheSerializer, FileManager.getInstance(), threadExecutor);
-        UserDataStoreFactory userDataStoreFactory = new UserDataStoreFactory(this.getContext(), userCache);
-        UserEntityDataMapper userEntityDataMapper = new UserEntityDataMapper();
-        UserRepository userRepository = UserDataRepository.getInstance(userDataStoreFactory, userEntityDataMapper);
-
-        GetUserListUseCase getUserListUseCase = new GetUserListUseCaseImpl(userRepository, threadExecutor, postExecutionThread);
-        UserModelDataMapper userModelDataMapper = new UserModelDataMapper();
-
-        this.userListPresenter = new UserListPresenter(this, getUserListUseCase, userModelDataMapper);
     }
 
     @Override

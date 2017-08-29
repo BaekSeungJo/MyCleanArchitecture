@@ -32,6 +32,8 @@ import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
 import com.example.presentation.view.component.AutoLoadImageView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,7 +47,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     private static final String ARGUMENT_KEY_USER_ID = "org.android10.ARGUMENT_USER_ID";
 
     private int userId;
-    private UserDetailsPresenter userDetailsPresenter;
+    @Inject UserDetailsPresenter userDetailsPresenter;
 
     @BindView(R.id.iv_cover) AutoLoadImageView iv_cover;
     @BindView(R.id.tv_fullname) TextView tv_fullname;
@@ -73,7 +75,13 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getApplication().inject(this);
         this.initialize();
+    }
+
+    private void initialize() {
+        this.userDetailsPresenter.setView(this);
+        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
     }
 
     @Nullable
@@ -101,25 +109,6 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     public void onPause() {
         super.onPause();
         this.userDetailsPresenter.pause();
-    }
-
-    @Override
-    void initializePresenter() {
-        ThreadExecutor threadExecutor = JobExecutor.getInstance();
-        PostExecutionThread postExecutionThread = UIThread.getInstance();
-
-        JsonSerializer userCacheSerializer = new JsonSerializer();
-        UserCache userCache = UserCacheImpl.getInstance(getActivity(), userCacheSerializer, FileManager.getInstance(), threadExecutor);
-        UserDataStoreFactory userDataStoreFactory =
-                new UserDataStoreFactory(this.getContext(), userCache);
-        UserEntityDataMapper userEntityDataMapper = new UserEntityDataMapper();
-        UserRepository userRepository = UserDataRepository.getInstance(userDataStoreFactory, userEntityDataMapper);
-
-        GetUserDetailsUseCase getUserDetailsUseCase = new GetUserDetailsUseCaseImpl(userRepository, threadExecutor, postExecutionThread);
-        UserModelDataMapper userModelDataMapper = new UserModelDataMapper();
-
-        this.userDetailsPresenter =
-                new UserDetailsPresenter(this, getUserDetailsUseCase, userModelDataMapper);
     }
 
     @Override
@@ -163,10 +152,6 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public Context getContext() {
         return getActivity().getApplicationContext();
-    }
-
-    private void initialize() {
-        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
     }
 
     private void loadUserDetails() {

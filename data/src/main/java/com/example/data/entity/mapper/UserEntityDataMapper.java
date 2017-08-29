@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-05-31.
  */
-
+@Singleton
 public class UserEntityDataMapper {
 
+    @Inject
     public UserEntityDataMapper() {
     }
 

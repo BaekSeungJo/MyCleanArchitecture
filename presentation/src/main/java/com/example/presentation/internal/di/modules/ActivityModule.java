@@ -1,4 +1,4 @@
-package com.example.presentation;
+package com.example.presentation.internal.di.modules;
 
 import com.example.presentation.navigation.Navigator;
 

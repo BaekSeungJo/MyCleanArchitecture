@@ -7,6 +7,8 @@ import com.example.data.entity.mapper.UserEntityJsonMapper;
 import com.example.data.net.RestApi;
 import com.example.data.net.RestApiImpl;
 
+import javax.inject.Inject;
+
 /**
  * Created by plnc on 2017-06-12.
  */
@@ -16,6 +18,7 @@ public class UserDataStoreFactory {
     private final Context context;
     private final UserCache userCache;
 
+    @Inject
     public UserDataStoreFactory(Context context, UserCache userCache) {
         if(context == null || userCache == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
