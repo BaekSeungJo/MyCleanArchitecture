@@ -1,0 +1,53 @@
+allprojects {
+    repositories {
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+}
+
+ext {
+    //Android
+    androidBuildToolsVersion = "25.0.2"
+    androidMinSdkVersion = 16
+    androidTargetSdkVersion = 25
+    androidCompileSdkVersion = 25
+
+    //Libraries
+    daggerVersion = '2.4'
+    butterKnifeVersion = '8.8.1'
+    recyclerViewVersion = '25.0.+'
+    appcompatVersion = '25.2.0'
+    constraintVersion = '1.0.1'
+    rxJavaVersion = '1.0.3'
+    rxAndroidVersion = '0.23.0'
+    javaxAnnotationVersion = '10.0-b28'
+    gsonVersion = '2.3'
+    designVersion = '25.2.0'
+
+    presentationDependencies = [
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            butterKnife    : "com.jakewharton:butterknife:${butterKnifeVersion}",
+            recyclerView   : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
+            rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
+            rxAndroid      : "io.reactivex:rxandroid:${rxAndroidVersion}",
+            javaxAnnotation: "org.glassfish:javax.annotation:${javaxAnnotationVersion}",
+            butterKnifeCompiler : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
+            appCompat : "com.android.support:appcompat-v7:${appcompatVersion}",
+            constraint : "com.android.support.constraint:constraint-layout:${constraintVersion}",
+            design : "com.android.support:design:${designVersion}",
+    ]
+
+    domainDependencies = [
+            rxJava: "io.reactivex:rxjava:${rxJavaVersion}",
+    ]
+
+    dataDependencies = [
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            gson           : "com.google.code.gson:gson:${gsonVersion}",
+            rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
+            rxAndroid      : "io.reactivex:rxandroid:${rxAndroidVersion}",
+            javaxAnnotation: "org.glassfish:javax.annotation:${javaxAnnotationVersion}",
+    ]
+}
