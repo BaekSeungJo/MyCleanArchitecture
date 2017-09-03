@@ -39,7 +39,9 @@ ext {
     ]
 
     domainDependencies = [
-            rxJava: "io.reactivex:rxjava:${rxJavaVersion}",
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
     ]
 
     dataDependencies = [

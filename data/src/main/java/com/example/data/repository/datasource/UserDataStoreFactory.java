@@ -8,11 +8,13 @@ import com.example.data.net.RestApi;
 import com.example.data.net.RestApiImpl;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by plnc on 2017-06-12.
  */
 
+@Singleton
 public class UserDataStoreFactory {
 
     private final Context context;

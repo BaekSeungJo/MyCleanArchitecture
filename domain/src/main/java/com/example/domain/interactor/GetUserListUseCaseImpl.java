@@ -8,6 +8,8 @@ import com.example.domain.repository.UserRepository;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 /**
  * Created by plnc on 2017-05-31.
  */
@@ -20,10 +22,8 @@ public class GetUserListUseCaseImpl implements GetUserListUseCase {
 
     private GetUserListUseCase.Callback callback;
 
+    @Inject
     public GetUserListUseCaseImpl(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
-        if (userRepository == null || threadExecutor == null || postExecutionThread == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
-        }
         this.userRepository = userRepository;
         this.threadExecutor = threadExecutor;
         this.postExecutionThread = postExecutionThread;

@@ -1,6 +1,8 @@
 package com.example.presentation.internal.di.modules;
 
-import com.example.presentation.navigation.Navigator;
+import android.app.Activity;
+
+import com.example.presentation.internal.di.PerActivity;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,8 +13,15 @@ import dagger.Provides;
 
 @Module
 public class ActivityModule {
+    private final Activity activity;
+
+    public ActivityModule(Activity activity) {
+        this.activity = activity;
+    }
+
     @Provides
-    Navigator provideNavigator() {
-        return new Navigator();
+    @PerActivity
+    Activity activity() {
+        return this.activity;
     }
 }

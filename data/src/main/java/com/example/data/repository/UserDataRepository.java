@@ -11,29 +11,21 @@ import com.example.domain.repository.UserRepository;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-08.
  */
 
+@Singleton
 public class UserDataRepository implements UserRepository {
-
-    private static UserDataRepository INSTANCE;
-
-    public static synchronized UserDataRepository getInstance(UserDataStoreFactory dataStoreFactory,
-                                                              UserEntityDataMapper userEntityDataMapper) {
-        if(INSTANCE == null) {
-            INSTANCE = new UserDataRepository(dataStoreFactory, userEntityDataMapper);
-        }
-        return INSTANCE;
-    }
 
     private final UserDataStoreFactory userDataStoreFactory;
     private final UserEntityDataMapper userEntityDataMapper;
 
-    protected UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
-        if(userDataStoreFactory == null || userEntityDataMapper == null) {
-            throw new IllegalArgumentException("Invalid null parameters in constructor!!!");
-        }
+    @Inject
+    public UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
         this.userDataStoreFactory = userDataStoreFactory;
         this.userEntityDataMapper = userEntityDataMapper;
     }

@@ -8,25 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.example.data.cache.FileManager;
-import com.example.data.cache.UserCache;
-import com.example.data.cache.UserCacheImpl;
-import com.example.data.cache.serializer.JsonSerializer;
-import com.example.data.entity.mapper.UserEntityDataMapper;
-import com.example.data.executor.JobExecutor;
-import com.example.data.repository.UserDataRepository;
-import com.example.data.repository.datasource.UserDataStoreFactory;
-import com.example.domain.executor.PostExecutionThread;
-import com.example.domain.executor.ThreadExecutor;
-import com.example.domain.interactor.GetUserListUseCase;
-import com.example.domain.interactor.GetUserListUseCaseImpl;
-import com.example.domain.repository.UserRepository;
 import com.example.presentation.R;
-import com.example.presentation.UIThread;
-import com.example.presentation.mapper.UserModelDataMapper;
+import com.example.presentation.internal.di.components.DaggerUserComponent;
+import com.example.presentation.internal.di.components.UserComponent;
+import com.example.presentation.internal.di.modules.ActivityModule;
+import com.example.presentation.internal.di.modules.UserModule;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserListPresenter;
 import com.example.presentation.view.UserListView;
@@ -40,7 +28,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 /**
  * Created by plnc on 2017-06-27.
@@ -79,7 +66,13 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getApplication().inject(this);
+        DaggerUserComponent.builder()
+                .applicationComponent(getApplication().getApplicationComponent())
+                .activityModule(new ActivityModule(getActivity()))
+                .userModule(new UserModule())
+                .build()
+                .inject(this);
+
         this.initialize();
     }
 

@@ -5,22 +5,18 @@ import android.os.Looper;
 
 import com.example.domain.executor.PostExecutionThread;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-28.
  */
-
+@Singleton
 public class UIThread implements PostExecutionThread {
-
-    private static class LazyHolder {
-        private static final UIThread INSTANCE = new UIThread();
-    }
-
-    public static UIThread getInstance() {
-        return LazyHolder.INSTANCE;
-    }
 
     private final Handler handler;
 
+    @Inject
     public UIThread() {
         this.handler = new android.os.Handler(Looper.getMainLooper());
     }

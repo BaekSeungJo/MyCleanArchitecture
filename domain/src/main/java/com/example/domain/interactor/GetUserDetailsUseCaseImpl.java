@@ -6,6 +6,8 @@ import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.executor.ThreadExecutor;
 import com.example.domain.repository.UserRepository;
 
+import javax.inject.Inject;
+
 /**
  * Created by plnc on 2017-05-31.
  */
@@ -19,10 +21,8 @@ public class GetUserDetailsUseCaseImpl implements GetUserDetailsUseCase {
     private int userId = -1;
     private GetUserDetailsUseCase.Callback callback;
 
+    @Inject
     public GetUserDetailsUseCaseImpl(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
-        if (userRepository == null || threadExecutor == null || postExecutionThread == null) {
-            throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
-        }
         this.userRepository = userRepository;
         this.threadExecutor = threadExecutor;
         this.postExecutionThread = postExecutionThread;

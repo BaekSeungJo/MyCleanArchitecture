@@ -8,6 +8,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-05-31.
  */
@@ -16,6 +19,7 @@ public class UserEntityJsonMapper {
 
     private final Gson gson;
 
+    @Inject
     public UserEntityJsonMapper() {
         gson = new Gson();
     }

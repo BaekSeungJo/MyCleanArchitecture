@@ -8,19 +8,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-08.
  */
 
+@Singleton
 public class JobExecutor implements ThreadExecutor {
-
-    private static class LazyHolder {
-        private static final JobExecutor INSTANCE = new JobExecutor();
-    }
-
-    public static JobExecutor getInstance() {
-        return LazyHolder.INSTANCE;
-    }
 
     private static final int INITIAL_POOL_SIZE = 3;
     private static final int MAX_POOL_SIZE = 5;
@@ -31,6 +27,7 @@ public class JobExecutor implements ThreadExecutor {
     private final ThreadPoolExecutor threadPoolExecutor;
     private final ThreadFactory threadFactory;
 
+    @Inject
     public JobExecutor() {
         this.workQueue = new LinkedBlockingDeque<>();
         this.threadFactory = new JobThreadFactory();

@@ -6,6 +6,7 @@ import com.example.domain.User;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.GetUserListUseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
+import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserListView;
@@ -13,13 +14,12 @@ import com.example.presentation.view.UserListView;
 import java.util.Collection;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by plnc on 2017-06-26.
  */
 
-@Singleton
+@PerActivity
 public class UserListPresenter implements Presenter {
 
     private UserListView userListView;

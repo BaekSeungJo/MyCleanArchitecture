@@ -1,6 +1,7 @@
 package com.example.presentation.mapper;
 
 import com.example.domain.User;
+import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.model.UserModel;
 
 import java.util.ArrayList;
@@ -8,18 +9,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by plnc on 2017-06-26.
  */
 
-@Singleton
+@PerActivity
 public class UserModelDataMapper {
 
     @Inject
     public UserModelDataMapper() {
-        // empty
     }
 
     public UserModel transform(User user) {

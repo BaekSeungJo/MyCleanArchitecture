@@ -30,15 +30,11 @@ public class AndroidApplication extends Application {
         this.applicationComponent.inject(this);
     }
 
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
+    }
+
     public void inject(BaseActivity baseActivity) {
         this.applicationComponent.inject(baseActivity);
-    }
-
-    public void inject(UserListFragment userListFragment) {
-        this.applicationComponent.inject(userListFragment);
-    }
-
-    public void inject(UserDetailsFragment userDetailsFragment) {
-        this.applicationComponent.inject(userDetailsFragment);
     }
 }

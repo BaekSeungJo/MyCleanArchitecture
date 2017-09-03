@@ -10,20 +10,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-08.
  */
 
+@Singleton
 public class FileManager {
 
-    private FileManager() {
+    @Inject
+    public FileManager() {
     }
-
-    private static class LazyHolder {
-        private static final FileManager INSTANCE = new FileManager();
-    }
-
-    public static FileManager getInstance() { return LazyHolder.INSTANCE; }
 
     public void writeToFile(File file, String fileContent) {
         if(!file.exists()) {

@@ -9,20 +9,14 @@ import com.example.domain.executor.ThreadExecutor;
 
 import java.io.File;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Created by plnc on 2017-06-09.
  */
-
+@Singleton
 public class UserCacheImpl implements UserCache {
-
-    private static UserCacheImpl INSTANCE;
-
-    public static synchronized UserCacheImpl getInstance(Context context, JsonSerializer userCacheSerializer, FileManager fileManager, ThreadExecutor threadExecutor) {
-        if(INSTANCE == null) {
-            INSTANCE = new UserCacheImpl(context, userCacheSerializer, fileManager, threadExecutor);
-        }
-        return INSTANCE;
-    }
 
     private static final String SETTINGS_FILE_NAME = "com.fernandocejas.android10.SETTINGS";
     private static final String SETTINGS_LAST_CACHE_UPDATE = "last_cache_update";
@@ -36,7 +30,8 @@ public class UserCacheImpl implements UserCache {
     private final FileManager fileManager;
     private final ThreadExecutor threadExecutor;
 
-    private UserCacheImpl(Context context, JsonSerializer userCacheSerializer,
+    @Inject
+    public UserCacheImpl(Context context, JsonSerializer userCacheSerializer,
                           FileManager fileManager, ThreadExecutor executor) {
         if(context == null || userCacheSerializer == null || fileManager == null || executor == null) {
             throw new IllegalArgumentException("Invalid null parametaer");

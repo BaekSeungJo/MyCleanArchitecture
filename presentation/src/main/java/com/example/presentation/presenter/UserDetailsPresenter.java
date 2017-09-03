@@ -6,14 +6,18 @@ import com.example.domain.User;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.GetUserDetailsUseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
+import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserDetailsView;
+
+import javax.inject.Inject;
 
 /**
  * Created by plnc on 2017-06-28.
  */
 
+@PerActivity
 public class UserDetailsPresenter implements Presenter {
 
     private int userId;
@@ -22,6 +26,7 @@ public class UserDetailsPresenter implements Presenter {
     private final GetUserDetailsUseCase getUserDetailsUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
+    @Inject
     public UserDetailsPresenter(GetUserDetailsUseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserDetailsUseCase = getUserDetailsUseCase;
         this.userModelDataMapper = userModelDataMapper;
