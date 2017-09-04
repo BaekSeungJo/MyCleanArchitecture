@@ -13,8 +13,6 @@ import android.widget.RelativeLayout;
 import com.example.presentation.R;
 import com.example.presentation.internal.di.components.DaggerUserComponent;
 import com.example.presentation.internal.di.components.UserComponent;
-import com.example.presentation.internal.di.modules.ActivityModule;
-import com.example.presentation.internal.di.modules.UserModule;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserListPresenter;
 import com.example.presentation.view.UserListView;
@@ -63,19 +61,6 @@ public class UserListFragment extends BaseFragment implements UserListView {
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        DaggerUserComponent.builder()
-//                .applicationComponent(getApplication().getApplicationComponent())
-//                .activityModule(new ActivityModule(getActivity()))
-//                .userModule(new UserModule())
-//                .build()
-//                .inject(this);
-        this.initializeInjector();
-        this.initialize();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,6 +79,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.initialize();
         this.loadUserList();
     }
 
@@ -179,14 +165,8 @@ public class UserListFragment extends BaseFragment implements UserListView {
         }
     };
 
-    private void initializeInjector() {
-        DaggerUserComponent.builder()
-                .applicationComponent(getApplicationComponent())
-                .build()
-                .inject(this);
-    }
-
     private void initialize() {
+        this.getComponent(UserComponent.class).inject(this);
         this.userListPresenter.setView(this);
     }
 

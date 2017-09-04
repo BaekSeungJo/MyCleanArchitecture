@@ -3,6 +3,9 @@ package com.example.data.net;
 import com.example.data.entity.UserEntity;
 
 import java.util.Collection;
+import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by plnc on 2017-06-08.
@@ -26,7 +29,11 @@ public interface RestApi {
     static final String API_URL_GET_USER_LIST = API_BASE_URL + "users.json";
     static final String API_URL_GET_USER_DETAILS = API_BASE_URL + "user_";
 
-    void getUserList(UserListCallback userListCallback);
+    /**
+     * Get a Observable which will emit a List of {@link UserEntity}
+     * @return
+     */
+    Observable<List<UserEntity>> getUserEntityList();
 
     void getUserById(final int userId, final UserDetailsCallback userDetailsCallback);
 }

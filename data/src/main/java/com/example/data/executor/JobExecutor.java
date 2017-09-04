@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Created by plnc on 2017-06-08.
+ * Decorated {@link java.util.concurrent.ThreadPoolExecutor}
  */
 
 @Singleton

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.presentation.R;
 import com.example.presentation.internal.di.components.DaggerUserComponent;
+import com.example.presentation.internal.di.components.UserComponent;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
@@ -32,6 +33,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     private static final String ARGUMENT_KEY_USER_ID = "org.android10.ARGUMENT_USER_ID";
 
     private int userId;
+
     @Inject UserDetailsPresenter userDetailsPresenter;
 
     @BindView(R.id.iv_cover) AutoLoadImageView iv_cover;
@@ -57,18 +59,14 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         return userDetailsFragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        DaggerUserComponent.builder()
-//                .applicationComponent(getApplication().getApplicationComponent())
-//                .activityModule(new ActivityModule(getActivity()))
-//                .userModule(new UserModule())
-//                .build()
-//                .inject(this);
-        this.initializeInjector();
-        this.initialize();
-    }
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//        this.initializeInjector();
+//        this.initialize();
+//    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,7 +79,8 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.loadUserDetails();
+//        this.loadUserDetails();
+        this.initialize();
     }
 
     @Override
@@ -150,15 +149,17 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         this.loadUserDetails();
     }
 
-    private void initializeInjector() {
-        DaggerUserComponent.builder()
-                .applicationComponent(getApplicationComponent())
-                .build()
-                .inject(this);
-    }
+//    private void initializeInjector() {
+//        DaggerUserComponent.builder()
+//                .applicationComponent(getApplicationComponent())
+//                .build()
+//                .inject(this);
+//    }
 
     private void initialize() {
+        this.getComponent(UserComponent.class).inject(this);
         this.userDetailsPresenter.setView(this);
         this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
+        this.userDetailsPresenter.initialize(this.userId);
     }
 }

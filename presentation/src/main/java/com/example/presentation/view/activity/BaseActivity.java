@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.presentation.AndroidApplication;
+import com.example.presentation.internal.di.components.ApplicationComponent;
+import com.example.presentation.internal.di.modules.ActivityModule;
 import com.example.presentation.navigation.Navigator;
 
 import javax.inject.Inject;
@@ -22,16 +24,20 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.initializeInjector();
-    }
-
-    private void initializeInjector() {
-        ((AndroidApplication) getApplication()).inject(this);
+        this.getApplicationComponent().inject(this);
     }
 
     protected void addFragment(int containerViewId, Fragment fragment) {
         FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         ft.add(containerViewId, fragment);
         ft.commit();
+    }
+
+    protected ApplicationComponent getApplicationComponent() {
+        return ((AndroidApplication) getApplication()).getApplicationComponent();
+    }
+
+    protected ActivityModule getActivityModule() {
+        return new ActivityModule(this);
     }
 }

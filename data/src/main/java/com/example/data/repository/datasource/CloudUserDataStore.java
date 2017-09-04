@@ -9,7 +9,6 @@ import java.util.Collection;
 /**
  * Created by plnc on 2017-06-12.
  */
-
 public class CloudUserDataStore implements UserDataStore {
 
     private final RestApi restApi;

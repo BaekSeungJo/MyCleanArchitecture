@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Created by plnc on 2017-05-31.
+ * Mapper class used to transform {@link UserEntity} in data layer to {@link User} in the
+ * domain layer.
  */
 @Singleton
 public class UserEntityDataMapper {
@@ -34,7 +35,13 @@ public class UserEntityDataMapper {
         return user;
     }
 
-    public Collection<User> transform(Collection<UserEntity> userEntityCollection) {
+    /**
+     * Transform a List of {@link UserEntity} into a Collection of {@link User}.
+     *
+     * @param userEntityCollection Object Collection to be transformed.
+     * @return {@link User} if valid {@link UserEntity} otherwise null.
+     */
+    public List<User> transform(Collection<UserEntity> userEntityCollection) {
         List<User> userList = new ArrayList<>();
         User user;
         for(UserEntity userEntity : userEntityCollection) {

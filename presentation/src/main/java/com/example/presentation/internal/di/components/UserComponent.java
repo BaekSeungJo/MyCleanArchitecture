@@ -12,6 +12,10 @@ import dagger.Component;
  * Created by 1 on 2017-09-04.
  */
 
+/**
+ * A scope {@link com.example.presentation.internal.di.PerActivity} compoent.
+ * Injects user specific Fragment
+ */
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = {ActivityModule.class, UserModule.class})
 public interface UserComponent {

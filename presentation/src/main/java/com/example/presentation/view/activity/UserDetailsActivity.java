@@ -6,14 +6,18 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.example.presentation.R;
+import com.example.presentation.internal.di.HasComponent;
+import com.example.presentation.internal.di.components.DaggerUserComponent;
+import com.example.presentation.internal.di.components.UserComponent;
 import com.example.presentation.view.fragment.UserDetailsFragment;
 
-public class UserDetailsActivity extends BaseActivity
+public class UserDetailsActivity extends BaseActivity implements HasComponent<UserComponent>
 {
     private static final String INTENT_EXTRA_PARAM_USER_ID = "org.android10.INTENT_PARAM_USER_ID";
     private static final String INSTANCE_STATE_PARAM_USER_ID = "org.android10.STATE_PARAM_USER_ID";
 
     private int userId;
+    private UserComponent userComponent;
 
     public static Intent getCallingIntent(Context context, int userId) {
         Intent callingIntent = new Intent(context, UserDetailsActivity.class);
@@ -28,6 +32,7 @@ public class UserDetailsActivity extends BaseActivity
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_user_details);
 
+        this.initializeInjector();
         this.initializeActivity(savedInstanceState);
     }
 
@@ -46,5 +51,17 @@ public class UserDetailsActivity extends BaseActivity
         } else {
             this.userId = savedInstanceState.getInt(INSTANCE_STATE_PARAM_USER_ID);
         }
+    }
+
+    @Override
+    public UserComponent getComponent() {
+        return userComponent;
+    }
+
+    private void initializeInjector() {
+        this.userComponent = DaggerUserComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule())
+                .build();
     }
 }

@@ -6,13 +6,12 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
- * Created by plnc on 2017-05-31.
+ * Class used to transform from Strings representing json to valid objects.
  */
 
 public class UserEntityJsonMapper {
@@ -35,13 +34,13 @@ public class UserEntityJsonMapper {
         }
     }
 
-    public Collection<UserEntity> transformUserEntityCollection(String userListJsonResponse)
+    public List<UserEntity> transformUserEntityCollection(String userListJsonResponse)
         throws JsonSyntaxException {
-        Collection<UserEntity> userEntityCollection;
+        List<UserEntity> userEntityCollection;
 
         try {
-            Type listOfUserEntityType = new TypeToken<Collection<UserEntity>>(){}.getType();
-            userEntityCollection = gson.fromJson(userListJsonResponse, listOfUserEntityType);
+            Type listOfUserEntityType = new TypeToken<List<UserEntity>>(){}.getType();
+            userEntityCollection = this.gson.fromJson(userListJsonResponse, listOfUserEntityType);
 
             return userEntityCollection;
         } catch (JsonSyntaxException jsonException) {

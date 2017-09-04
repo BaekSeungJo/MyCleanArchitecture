@@ -10,9 +10,8 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by 1 on 2017-08-30.
+ * Dagger module that provides user related collaborators.
  */
-
 @Module
 public class UserModule {
 

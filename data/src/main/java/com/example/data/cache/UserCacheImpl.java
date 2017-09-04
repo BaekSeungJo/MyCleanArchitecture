@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Created by plnc on 2017-06-09.
+ * {@link UserCache} implementation.
  */
 @Singleton
 public class UserCacheImpl implements UserCache {
@@ -30,6 +30,14 @@ public class UserCacheImpl implements UserCache {
     private final FileManager fileManager;
     private final ThreadExecutor threadExecutor;
 
+    /**
+     * Constructor of the class {@link UserCacheImpl}
+     *
+     * @param context A
+     * @param userCacheSerializer {@link JsonSerializer} for object serialization.
+     * @param fileManager {@link FileManager} for saving serialized objects to the file system.
+     * @param executor
+     */
     @Inject
     public UserCacheImpl(Context context, JsonSerializer userCacheSerializer,
                           FileManager fileManager, ThreadExecutor executor) {
