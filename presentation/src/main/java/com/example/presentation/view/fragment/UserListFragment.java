@@ -66,18 +66,14 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerUserComponent.builder()
-                .applicationComponent(getApplication().getApplicationComponent())
-                .activityModule(new ActivityModule(getActivity()))
-                .userModule(new UserModule())
-                .build()
-                .inject(this);
-
+//        DaggerUserComponent.builder()
+//                .applicationComponent(getApplication().getApplicationComponent())
+//                .activityModule(new ActivityModule(getActivity()))
+//                .userModule(new UserModule())
+//                .build()
+//                .inject(this);
+        this.initializeInjector();
         this.initialize();
-    }
-
-    private void initialize() {
-        this.userListPresenter.setView(this);
     }
 
     @Nullable
@@ -182,4 +178,16 @@ public class UserListFragment extends BaseFragment implements UserListView {
             }
         }
     };
+
+    private void initializeInjector() {
+        DaggerUserComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .build()
+                .inject(this);
+    }
+
+    private void initialize() {
+        this.userListPresenter.setView(this);
+    }
+
 }

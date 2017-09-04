@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.example.presentation.R;
 import com.example.presentation.internal.di.components.DaggerUserComponent;
-import com.example.presentation.internal.di.components.UserComponent;
-import com.example.presentation.internal.di.modules.ActivityModule;
-import com.example.presentation.internal.di.modules.UserModule;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
@@ -63,21 +60,15 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DaggerUserComponent.builder()
-                .applicationComponent(getApplication().getApplicationComponent())
-                .activityModule(new ActivityModule(getActivity()))
-                .userModule(new UserModule())
-                .build()
-                .inject(this);
-
+//        DaggerUserComponent.builder()
+//                .applicationComponent(getApplication().getApplicationComponent())
+//                .activityModule(new ActivityModule(getActivity()))
+//                .userModule(new UserModule())
+//                .build()
+//                .inject(this);
+        this.initializeInjector();
         this.initialize();
     }
-
-    private void initialize() {
-        this.userDetailsPresenter.setView(this);
-        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -157,5 +148,17 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @OnClick(R.id.bt_retry)
     void onButtonRetryClick() {
         this.loadUserDetails();
+    }
+
+    private void initializeInjector() {
+        DaggerUserComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .build()
+                .inject(this);
+    }
+
+    private void initialize() {
+        this.userDetailsPresenter.setView(this);
+        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
     }
 }

@@ -6,8 +6,6 @@ import com.example.presentation.internal.di.components.ApplicationComponent;
 import com.example.presentation.internal.di.components.DaggerApplicationComponent;
 import com.example.presentation.internal.di.modules.ApplicationModule;
 import com.example.presentation.view.activity.BaseActivity;
-import com.example.presentation.view.fragment.UserDetailsFragment;
-import com.example.presentation.view.fragment.UserListFragment;
 
 /**
  * Created by plnc on 2017-08-29.
