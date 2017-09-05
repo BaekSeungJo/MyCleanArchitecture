@@ -3,6 +3,9 @@ package com.example.data.repository.datasource;
 import com.example.data.entity.UserEntity;
 
 import java.util.Collection;
+import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by plnc on 2017-06-09.
@@ -10,20 +13,19 @@ import java.util.Collection;
 
 public interface UserDataStore {
 
-    interface UserListCallback {
-        void onUserListLoaded(Collection<UserEntity> usersCollection);
+    /**
+     * Get an {@link rx.Observable} which will emit a List of {@link UserEntity}
+     * @return
+     */
+    Observable<List<UserEntity>> getUserEntityList();
 
-        void onError(Exception exception);
-    }
 
-    interface UserDetailsCallback {
-        void onUserEntityLoaded(UserEntity userEntity);
-
-        void onError(Exception exception);
-    }
-
-    void getUsersEntityList(UserListCallback userListCallback);
-
-    void getUserEntityDetails(int id, UserDetailsCallback userDetailsCallback);
+    /**
+     * Get an {@link rx.Observable} which will emit a {@link UserEntity} by its id.
+     *
+     * @param id
+     * @return
+     */
+    Observable<UserEntity> getUserEntityDetails(final  int id);
 
 }

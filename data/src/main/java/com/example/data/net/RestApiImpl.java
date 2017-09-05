@@ -9,7 +9,6 @@ import com.example.data.entity.mapper.UserEntityJsonMapper;
 import com.example.data.exception.NetworkConnectionException;
 
 import java.net.MalformedURLException;
-import java.util.Collection;
 import java.util.List;
 
 import rx.Observable;
@@ -31,27 +30,6 @@ public class RestApiImpl implements RestApi {
         this.context = context;
         this.userEntityJsonMapper = userEntityJsonMapper;
     }
-
-//    @Override
-//    public void getUserList(UserListCallback userListCallback) {
-//        if(userListCallback == null) {
-//            throw new IllegalArgumentException("Callback cannot be null!!!");
-//        }
-//
-//        if(isThereInternetConnection()) {
-//            try {
-//                ApiConnection getUserListConnection = ApiConnection.createGet(RestApi.API_URL_GET_USER_LIST);
-//                String responseUserList = getUserListConnection.requestSyncCall();
-//                Collection<UserEntity> userEntityList = userEntityJsonMapper.transformUserEntityCollection(responseUserList);
-//
-//                userListCallback.onUserListLoaded(userEntityList);
-//            } catch (Exception e) {
-//                userListCallback.onError(new NetworkConnectionException(e.getCause()));
-//            }
-//        } else {
-//            userListCallback.onError(new NetworkConnectionException());
-//        }
-//    }
 
     /**
      * Get a Observable which will emit a List of {@link UserEntity}

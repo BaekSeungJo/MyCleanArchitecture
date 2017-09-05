@@ -12,6 +12,9 @@ import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * {@link UserCache} implementation.
  */
@@ -51,17 +54,28 @@ public class UserCacheImpl implements UserCache {
         this.threadExecutor = executor;
     }
 
+    /**
+     * Get an {@link Observable} which will emit a {@link UserEntity}.
+     *
+     * @param userId The user id  to retrive data
+     */
     @Override
-    public synchronized void get(int userId, UserCacheCallback callback) {
-        File userEntityFile = buildFile(userId);
-        String fileContent = fileManager.readFileContent(userEntityFile);
-        UserEntity userEntity = serializer.deserialize(fileContent);
+    public synchronized Observable<UserEntity> get(final int userId) {
+        return Observable.create(new Observable.OnSubscribe<UserEntity>() {
+            @Override
+            public void call(Subscriber<? super UserEntity> subscriber) {
+                File userEntityFile = buildFile(userId);
+                String fileContent = fileManager.readFileContent(userEntityFile);
+                UserEntity userEntity = serializer.deserialize(fileContent);
 
-        if(userEntity != null) {
-            callback.onUserEntityLoaded(userEntity);
-        } else {
-            callback.onError(new UserNotFoundException());
-        }
+                if(userEntity != null) {
+                    subscriber.onNext(userEntity);
+                    subscriber.onCompleted();
+                } else {
+                    subscriber.onError(new UserNotFoundException());
+                }
+            }
+        });
     }
 
     @Override

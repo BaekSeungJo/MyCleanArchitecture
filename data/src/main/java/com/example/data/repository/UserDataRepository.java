@@ -10,9 +10,14 @@ import com.example.domain.User;
 import com.example.domain.repository.UserRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import rx.Observable;
+import rx.functions.Func0;
+import rx.functions.Func1;
 
 /**
  * Created by plnc on 2017-06-08.
@@ -24,6 +29,14 @@ public class UserDataRepository implements UserRepository {
     private final UserDataStoreFactory userDataStoreFactory;
     private final UserEntityDataMapper userEntityDataMapper;
 
+    private final Func1<List<UserEntity>, List<User>> userEntityMapper =
+            new Func1<List<UserEntity>, List<User>>() {
+                @Override
+                public List<User> call(List<UserEntity> userEntities) {
+                    return userEntityDataMapper.transform(userEntities);
+                }
+            };
+
     @Inject
     public UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
         this.userDataStoreFactory = userDataStoreFactory;
@@ -31,20 +44,9 @@ public class UserDataRepository implements UserRepository {
     }
 
     @Override
-    public void getUserList(final UserListCallback userListCallback) {
+    public Observable<List<User>> getUsers() {
         final UserDataStore userDataStore = userDataStoreFactory.createCloudDataStore();
-        userDataStore.getUsersEntityList(new UserDataStore.UserListCallback() {
-            @Override
-            public void onUserListLoaded(Collection<UserEntity> usersCollection) {
-                Collection<User> users = userEntityDataMapper.transform(usersCollection);
-                userListCallback.onUserListLoaded(users);
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                userListCallback.onError(new RepositoryErrorBundle(exception));
-            }
-        });
+        return userDataStore.getUserEntityList().map(userEntityMapper);
     }
 
     @Override
