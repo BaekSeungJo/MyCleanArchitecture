@@ -5,9 +5,8 @@ import com.example.data.entity.UserEntity;
 import rx.Observable;
 
 /**
- * Created by plnc on 2017-06-09.
+ * An interface representing a user Cache.
  */
-
 public interface UserCache {
 
     /**

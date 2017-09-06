@@ -44,8 +44,13 @@ public class RestApiImpl implements RestApi {
             public void call(Subscriber<? super List<UserEntity>> subscriber) {
                 if(isThereInternetConnection()) {
                     try {
-                        subscriber.onNext(getUserEntitiesFromApi());
-                        subscriber.onCompleted();
+                        String responseUserEntities = getUserEntitiesFromApi();
+                        if(responseUserEntities != null) {
+                            subscriber.onNext(userEntityJsonMapper.transformUserEntityCollection(responseUserEntities));
+                            subscriber.onCompleted();
+                        } else {
+                            subscriber.onError(new NetworkConnectionException());
+                        }
                     } catch(Exception e) {
                         subscriber.onError(new NetworkConnectionException(e.getCause()));
                     }
@@ -56,37 +61,37 @@ public class RestApiImpl implements RestApi {
         });
     }
 
-    private List<UserEntity> getUserEntitiesFromApi() throws MalformedURLException {
-        ApiConnection getUserListConnection = ApiConnection.createGet(RestApi.API_URL_GET_USER_LIST);
-        String responseUserList = getUserListConnection.requestSyncCall();
-
-        return userEntityJsonMapper.transformUserEntityCollection(responseUserList);
-    }
-
     @Override
-    public void getUserById(int userId, UserDetailsCallback userDetailsCallback) {
-        if(userDetailsCallback == null) {
-            throw new IllegalArgumentException("Callback cannot be null!!!");
-        }
-
-        if(isThereInternetConnection()) {
-            try {
-                String apiUrl = RestApi.API_URL_GET_USER_DETAILS + userId + ".json";
-                ApiConnection getUserDetailsConnection = ApiConnection.createGet(apiUrl);
-                String responseUserDetails = getUserDetailsConnection.requestSyncCall();
-
-                if(responseUserDetails != null) {
-                    UserEntity userEntity = this.userEntityJsonMapper.transformUserEntity(responseUserDetails);
-                    userDetailsCallback.onUserEntityLoaded(userEntity);
+    public Observable<UserEntity> getUserEntityById(final int userId) {
+        return Observable.create(new Observable.OnSubscribe<UserEntity>() {
+            @Override
+            public void call(Subscriber<? super UserEntity> subscriber) {
+                if(isThereInternetConnection()) {
+                    try {
+                        String responseUserDetails = getUserDetailsFromApi(userId);
+                        if(responseUserDetails != null) {
+                            subscriber.onNext(userEntityJsonMapper.transformUserEntity(responseUserDetails));
+                            subscriber.onCompleted();
+                        } else {
+                            subscriber.onError(new NetworkConnectionException());
+                        }
+                    } catch (Exception e) {
+                        subscriber.onError(new NetworkConnectionException(e.getCause()));
+                    }
                 } else {
-                    userDetailsCallback.onError(new NetworkConnectionException());
+                    subscriber.onError(new NetworkConnectionException());
                 }
-            } catch (Exception e) {
-                userDetailsCallback.onError(new NetworkConnectionException(e.getCause()));
             }
-        } else userDetailsCallback.onError(new NetworkConnectionException());
+        });
     }
 
+    private String getUserEntitiesFromApi() throws MalformedURLException {
+        return ApiConnection.createGet(RestApi.API_URL_GET_USER_LIST).requestSyncCall();
+    }
+
+    private String getUserDetailsFromApi(int userId) throws MalformedURLException {
+        return ApiConnection.createGet(RestApi.API_URL_GET_USER_DETAILS).requestSyncCall();
+    }
     private boolean isThereInternetConnection() {
         boolean isConnected;
 

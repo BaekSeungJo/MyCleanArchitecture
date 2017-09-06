@@ -29,13 +29,21 @@ public class UserDataRepository implements UserRepository {
     private final UserDataStoreFactory userDataStoreFactory;
     private final UserEntityDataMapper userEntityDataMapper;
 
-    private final Func1<List<UserEntity>, List<User>> userEntityMapper =
+    private final Func1<List<UserEntity>, List<User>> userListEntityMapper =
             new Func1<List<UserEntity>, List<User>>() {
                 @Override
                 public List<User> call(List<UserEntity> userEntities) {
                     return userEntityDataMapper.transform(userEntities);
                 }
             };
+
+    private final Func1<UserEntity, User> userDetailsEntityMapper =
+            new Func1<UserEntity, User>() {
+                @Override
+                public User call(UserEntity userEntity) {
+                    return userEntityDataMapper.transform(userEntity);
+                }
+            }
 
     @Inject
     public UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
@@ -46,7 +54,7 @@ public class UserDataRepository implements UserRepository {
     @Override
     public Observable<List<User>> getUsers() {
         final UserDataStore userDataStore = userDataStoreFactory.createCloudDataStore();
-        return userDataStore.getUserEntityList().map(userEntityMapper);
+        return userDataStore.getUserEntityList().map(userListEntityMapper);
     }
 
     @Override

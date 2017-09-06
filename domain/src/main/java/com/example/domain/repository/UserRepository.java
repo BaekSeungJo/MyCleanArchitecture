@@ -14,19 +14,11 @@ import rx.Observable;
 
 public interface UserRepository {
 
-    interface UserListCallback {
-        void onUserListLoaded(Collection<User> usersCollection);
-
-        void onError(ErrorBundle errorBundle);
-    }
-
     interface UserDetailsCallback {
         void onUserLoaded(User user);
 
         void onError(ErrorBundle errorBundle);
     }
-
-    //void getUserList(UserListCallback userListCallback);
 
     /**
      * Get an {@link rx.Observable} which will emit a List of {@link User}
