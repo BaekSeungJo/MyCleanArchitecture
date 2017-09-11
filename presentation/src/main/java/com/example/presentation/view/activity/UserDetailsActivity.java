@@ -9,6 +9,7 @@ import com.example.presentation.R;
 import com.example.presentation.internal.di.HasComponent;
 import com.example.presentation.internal.di.components.DaggerUserComponent;
 import com.example.presentation.internal.di.components.UserComponent;
+import com.example.presentation.internal.di.modules.UserModule;
 import com.example.presentation.view.fragment.UserDetailsFragment;
 
 public class UserDetailsActivity extends BaseActivity implements HasComponent<UserComponent>
@@ -32,8 +33,8 @@ public class UserDetailsActivity extends BaseActivity implements HasComponent<Us
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_user_details);
 
-        this.initializeInjector();
         this.initializeActivity(savedInstanceState);
+        this.initializeInjector();
     }
 
     @Override
@@ -62,6 +63,7 @@ public class UserDetailsActivity extends BaseActivity implements HasComponent<Us
         this.userComponent = DaggerUserComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .activityModule(getActivityModule())
+                .userModule(new UserModule(this.userId))
                 .build();
     }
 }

@@ -23,9 +23,9 @@ public interface UserDataStore {
     /**
      * Get an {@link rx.Observable} which will emit a {@link UserEntity} by its id.
      *
-     * @param id
+     * @param userId
      * @return
      */
-    Observable<UserEntity> getUserEntityDetails(final  int id);
+    Observable<UserEntity> getUserEntityDetails(final  int userId);
 
 }

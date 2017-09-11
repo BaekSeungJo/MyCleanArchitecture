@@ -1,10 +1,14 @@
 package com.example.domain.executor;
 
+import rx.Scheduler;
+
 /**
- * Created by plnc on 2017-05-31.
+ * Thread abstraction created to change the execution context from any thread to any other thread.
+ * Useful to encapsulate a UI Thread for example, since some job will be done in background, an
+ * implementation of this interface will change context and update the UI.
  */
 
 public interface PostExecutionThread {
-
-    void post(Runnable runnable);
+    
+    Scheduler getScheduler();
 }

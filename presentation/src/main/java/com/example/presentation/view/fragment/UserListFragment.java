@@ -96,6 +96,12 @@ public class UserListFragment extends BaseFragment implements UserListView {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        userListPresenter.destroy();
+    }
+
+    @Override
     public void showLoading() {
         rl_progress.setVisibility(View.VISIBLE);
         getActivity().setProgressBarIndeterminateVisibility(true);

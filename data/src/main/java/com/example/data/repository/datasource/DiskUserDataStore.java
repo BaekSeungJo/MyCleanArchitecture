@@ -13,7 +13,7 @@ import rx.Observable;
 
 public class DiskUserDataStore implements UserDataStore {
 
-    private final UserCache userCache;
+    private final UserCache  userCache;
 
     public DiskUserDataStore(UserCache userCache) {
         this.userCache = userCache;

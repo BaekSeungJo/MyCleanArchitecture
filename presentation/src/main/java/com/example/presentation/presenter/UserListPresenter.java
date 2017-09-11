@@ -3,8 +3,11 @@ package com.example.presentation.presenter;
 import android.support.annotation.NonNull;
 
 import com.example.domain.User;
+import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
+import com.example.domain.interactor.DefaultSubscriber;
 import com.example.domain.interactor.GetUserListUseCase;
+import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
@@ -12,22 +15,24 @@ import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserListView;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by plnc on 2017-06-26.
  */
 
 @PerActivity
-public class UserListPresenter implements Presenter {
+public class UserListPresenter extends DefaultSubscriber<List<User>> implements Presenter {
 
     private UserListView userListView;
-    private final GetUserListUseCase getUserListUseCase;
+    private final UseCase getUserListUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserListPresenter(GetUserListUseCase getUserListUseCase, UserModelDataMapper userModelDataMapper) {
+    public UserListPresenter(@Named("userList") UseCase getUserListUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserListUseCase = getUserListUseCase;
         this.userModelDataMapper = userModelDataMapper;
     }
@@ -44,6 +49,11 @@ public class UserListPresenter implements Presenter {
     @Override
     public void pause() {
 
+    }
+
+    @Override
+    public void destroy() {
+        this.getUserListUseCase.unsubscribe();
     }
 
     public void initialize() {
@@ -87,21 +97,23 @@ public class UserListPresenter implements Presenter {
     }
 
     private void getUserList() {
-        this.getUserListUseCase.execute(userListCallback);
+        this.getUserListUseCase.execute(this);
     }
 
-    private final GetUserListUseCase.Callback userListCallback = new GetUserListUseCase.Callback() {
-        @Override
-        public void onUserListLoaded(Collection<User> userCollection) {
-            UserListPresenter.this.showUsersCollectionView(userCollection);
-            UserListPresenter.this.hideViewLoading();
-        }
+    @Override
+    public void onCompleted() {
+        this.hideViewLoading();
+    }
 
-        @Override
-        public void onError(ErrorBundle errorBundle) {
-            UserListPresenter.this.hideViewLoading();
-            UserListPresenter.this.showErrorMessage(errorBundle);
-            UserListPresenter.this.showViewRetry();
-        }
-    };
+    @Override
+    public void onError(Throwable e) {
+        this.hideViewLoading();
+        this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+        this.showViewRetry();
+    }
+
+    @Override
+    public void onNext(List<User> users) {
+        this.showUsersCollectionView(users);
+    }
 }

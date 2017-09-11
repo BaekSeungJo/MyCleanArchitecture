@@ -14,17 +14,16 @@ import rx.Observable;
 
 public interface UserRepository {
 
-    interface UserDetailsCallback {
-        void onUserLoaded(User user);
-
-        void onError(ErrorBundle errorBundle);
-    }
-
     /**
      * Get an {@link rx.Observable} which will emit a List of {@link User}
      * @return
      */
     Observable<List<User>> getUsers();
 
-    void getUserDetail(final int userId, UserDetailsCallback userDetailCallback);
+    /**
+     * Get an {@link rx.Observable} which will emit a {@link User}
+     * @param userId
+     * @return
+     */
+    Observable<User> getUserDetail(final int userId);
 }

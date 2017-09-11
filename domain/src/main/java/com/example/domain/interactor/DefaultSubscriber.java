@@ -1,4 +1,4 @@
-package com.example.domain;
+package com.example.domain.interactor;
 
 import rx.Subscriber;
 
@@ -14,7 +14,7 @@ public class DefaultSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
-
+        // no-op by default.
     }
 
     @Override

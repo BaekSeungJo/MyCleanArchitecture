@@ -95,6 +95,16 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         this.userDetailsPresenter.pause();
     }
 
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.userDetailsPresenter.destroy();
+    }
+
     @Override
     public void renderUser(UserModel user) {
         if (user != null) {

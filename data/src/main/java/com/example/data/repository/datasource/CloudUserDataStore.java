@@ -40,33 +40,11 @@ public class CloudUserDataStore implements UserDataStore {
     /**
      * Get an {@link Observable} which will emit a {@link UserEntity} by its id.
      *
-     * @param id
+     * @param userId
      * @return
      */
     @Override
-    public Observable<UserEntity> getUserEntityDetails(int id) {
-        return null;
-    }
-
-//    @Override
-//    public void getUserEntityDetails(int id, final UserDetailsCallback userDetailsCallback) {
-//        restApi.getUserById(id, new RestApi.UserDetailsCallback() {
-//            @Override
-//            public void onUserEntityLoaded(UserEntity userEntity) {
-//                userDetailsCallback.onUserEntityLoaded(userEntity);
-//                putUserEntityInCache(userEntity);
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//                userDetailsCallback.onError(e);
-//            }
-//        });
-//    }
-
-    private void putUserEntityInCache(UserEntity userEntity) {
-        if(userEntity != null) {
-            userCache.put(userEntity);
-        }
+    public Observable<UserEntity> getUserEntityDetails(int userId) {
+        return this.restApi.getUserEntityById(userId).doOnNext(saveToCacheAction);
     }
 }

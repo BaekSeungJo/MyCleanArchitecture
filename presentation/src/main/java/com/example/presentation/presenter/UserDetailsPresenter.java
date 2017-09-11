@@ -3,8 +3,11 @@ package com.example.presentation.presenter;
 import android.support.annotation.NonNull;
 
 import com.example.domain.User;
+import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
+import com.example.domain.interactor.DefaultSubscriber;
 import com.example.domain.interactor.GetUserDetailsUseCase;
+import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
@@ -12,22 +15,23 @@ import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserDetailsView;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by plnc on 2017-06-28.
  */
 
 @PerActivity
-public class UserDetailsPresenter implements Presenter {
+public class UserDetailsPresenter extends DefaultSubscriber<User> implements Presenter {
 
     private int userId;
 
     private UserDetailsView viewDetailsView;
-    private final GetUserDetailsUseCase getUserDetailsUseCase;
+    private final UseCase getUserDetailsUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserDetailsPresenter(GetUserDetailsUseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
+    public UserDetailsPresenter(@Named("userDetails") UseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserDetailsUseCase = getUserDetailsUseCase;
         this.userModelDataMapper = userModelDataMapper;
     }
@@ -44,6 +48,11 @@ public class UserDetailsPresenter implements Presenter {
     @Override
     public void pause() {
 
+    }
+
+    @Override
+    public void destroy() {
+        this.getUserDetailsUseCase.unsubscribe();
     }
 
     public void initialize(int userId) {
@@ -84,21 +93,23 @@ public class UserDetailsPresenter implements Presenter {
     }
 
     private void getUserDetails() {
-        this.getUserDetailsUseCase.execute(this.userId, this.userDetailsCallback);
+        this.getUserDetailsUseCase.execute(this);
     }
 
-    private final GetUserDetailsUseCase.Callback userDetailsCallback = new GetUserDetailsUseCase.Callback() {
-        @Override
-        public void onUserDataLoaded(User user) {
-            UserDetailsPresenter.this.showUserDetailsInView(user);
-            UserDetailsPresenter.this.hideViewLoading();
-        }
+    @Override
+    public void onCompleted() {
+        this.hideViewLoading();
+    }
 
-        @Override
-        public void onError(ErrorBundle errorBundle) {
-            UserDetailsPresenter.this.hideViewLoading();
-            UserDetailsPresenter.this.showErrorMessage(errorBundle);
-            UserDetailsPresenter.this.showViewRetry();
-        }
-    };
+    @Override
+    public void onError(Throwable e) {
+        this.hideViewLoading();
+        this.showErrorMessage(new DefaultErrorBundle((Exception)e));
+        this.showViewRetry();
+    }
+
+    @Override
+    public void onNext(User user) {
+        this.showUserDetailsInView(user);
+    }
 }

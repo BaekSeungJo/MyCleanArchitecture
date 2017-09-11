@@ -1,19 +1,38 @@
 package com.example.domain.interactor;
 
 import com.example.domain.User;
-import com.example.domain.exeception.ErrorBundle;
+import com.example.domain.exeception.DefaultErrorBundle;
+import com.example.domain.executor.PostExecutionThread;
+import com.example.domain.executor.ThreadExecutor;
+import com.example.domain.repository.UserRepository;
+
+import javax.inject.Inject;
+
+import rx.Observable;
 
 /**
  * Created by plnc on 2017-05-31.
  */
 
-public interface GetUserDetailsUseCase extends Interactor {
+public class GetUserDetailsUseCase extends UseCase{
 
-    interface Callback {
-        void onUserDataLoaded(User user);
-        void onError(ErrorBundle errorBundle);
+    private final int userId;
+    private final UserRepository userRepository;
+
+    @Inject
+    public GetUserDetailsUseCase(int userId, UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+        super(threadExecutor, postExecutionThread);
+        this.userId = userId;
+        this.userRepository = userRepository;
     }
 
-    void execute(int userId, Callback callback);
-
+    /**
+     * Builds an {@link Observable} which whill be used when executing the current {@link UseCase}.
+     *
+     * @return
+     */
+    @Override
+    protected Observable buildUseCaseObservable() {
+        return this.userRepository.getUserDetail(userId);
+    }
 }
