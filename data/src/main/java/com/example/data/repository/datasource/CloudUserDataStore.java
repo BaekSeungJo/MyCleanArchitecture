@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action;
 import rx.functions.Action1;
 
 /**
@@ -18,14 +19,12 @@ public class CloudUserDataStore implements UserDataStore {
     private final RestApi restApi;
     private final UserCache userCache;
 
-    private final Action1<UserEntity> saveToCacheAction = new Action1<UserEntity>() {
-        @Override
-        public void call(UserEntity userEntity) {
-            if(userEntity != null) {
-                CloudUserDataStore.this.userCache.put(userEntity);
-            }
-        }
-    };
+    private final Action1<UserEntity> saveToCacheAction =
+            userEntity -> {
+                if(userEntity != null) {
+                    CloudUserDataStore.this.userCache.put(userEntity);
+                }
+            };
 
     public CloudUserDataStore(RestApi restApi, UserCache userCache) {
         this.restApi = restApi;
@@ -45,6 +44,7 @@ public class CloudUserDataStore implements UserDataStore {
      */
     @Override
     public Observable<UserEntity> getUserEntityDetails(int userId) {
-        return this.restApi.getUserEntityById(userId).doOnNext(saveToCacheAction);
+        return this.restApi.getUserEntityById(userId).
+                doOnNext(saveToCacheAction);
     }
 }

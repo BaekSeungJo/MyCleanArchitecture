@@ -18,7 +18,7 @@ ext {
     recyclerViewVersion = '25.0.+'
     appcompatVersion = '25.2.0'
     constraintVersion = '1.0.1'
-    rxJavaVersion = '1.0.9'
+    rxJavaVersion = '1.0.12'
     rxAndroidVersion = '0.24.0'
     javaxAnnotationVersion = '10.0-b28'
     gsonVersion = '2.3'

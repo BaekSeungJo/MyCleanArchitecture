@@ -42,7 +42,7 @@ public class UserEntityDataMapper {
      * @return {@link User} if valid {@link UserEntity} otherwise null.
      */
     public List<User> transform(Collection<UserEntity> userEntityCollection) {
-        List<User> userList = new ArrayList<>();
+        List<User> userList = new ArrayList<>(20);
         User user;
         for(UserEntity userEntity : userEntityCollection) {
             user = transform(userEntity);

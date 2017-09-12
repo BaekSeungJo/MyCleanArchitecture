@@ -19,6 +19,7 @@ import com.example.presentation.view.UserListView;
 import com.example.presentation.view.adapter.UsersAdapter;
 import com.example.presentation.view.adapter.UsersLayoutManager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by plnc on 2017-06-27.
@@ -36,6 +38,8 @@ public class UserListFragment extends BaseFragment implements UserListView {
     public interface UserListListener {
         void onUserClicked(final UserModel userModel);
     }
+
+    private Unbinder unbinder;
 
     @Inject UserListPresenter userListPresenter;
 
@@ -65,7 +69,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_list, container, true);
-        ButterKnife.bind(this, fragmentView);
+        unbinder = ButterKnife.bind(this, fragmentView);
         setupUI();
 
         return fragmentView;
@@ -74,6 +78,11 @@ public class UserListFragment extends BaseFragment implements UserListView {
     private void setupUI() {
         this.usersLayoutManager = new UsersLayoutManager(getActivity());
         this.rv_users.setLayoutManager(usersLayoutManager);
+
+        this.userAdapter = new UsersAdapter(getActivity(), new ArrayList<UserModel>());
+        this.userAdapter.setOnItemClickListener(onItemClickListener);
+        this.rv_users.setAdapter(userAdapter);
+
     }
 
     @Override
@@ -93,6 +102,12 @@ public class UserListFragment extends BaseFragment implements UserListView {
     public void onPause() {
         super.onPause();
         userListPresenter.pause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -126,13 +141,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     @Override
     public void renderUserList(Collection<UserModel> userModelCollection) {
         if(userModelCollection != null) {
-            if(this.userAdapter == null) {
-                this.userAdapter = new UsersAdapter(getActivity(), userModelCollection);
-            } else {
-                this.userAdapter.setUsersCollection(userModelCollection);
-            }
-            this.userAdapter.setOnItemClickListener(onItemClickListener);
-            this.rv_users.setAdapter(userAdapter);
+            this.userAdapter.setUsersCollection(userModelCollection);
         }
     }
 

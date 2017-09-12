@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by plnc on 2017-06-28.
@@ -33,6 +34,8 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     private static final String ARGUMENT_KEY_USER_ID = "org.android10.ARGUMENT_USER_ID";
 
     private int userId;
+
+    private Unbinder unbinder;
 
     @Inject UserDetailsPresenter userDetailsPresenter;
 
@@ -59,19 +62,11 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         return userDetailsFragment;
     }
 
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        this.initializeInjector();
-//        this.initialize();
-//    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
-        ButterKnife.bind(this, fragmentView);
+        unbinder = ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
     }
@@ -79,7 +74,6 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        this.loadUserDetails();
         this.initialize();
     }
 
@@ -95,10 +89,12 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         this.userDetailsPresenter.pause();
     }
 
-    /**
-     * Called when the fragment is no longer in use.  This is called
-     * after {@link #onStop()} and before {@link #onDetach()}.
-     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -158,13 +154,6 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     void onButtonRetryClick() {
         this.loadUserDetails();
     }
-
-//    private void initializeInjector() {
-//        DaggerUserComponent.builder()
-//                .applicationComponent(getApplicationComponent())
-//                .build()
-//                .inject(this);
-//    }
 
     private void initialize() {
         this.getComponent(UserComponent.class).inject(this);
