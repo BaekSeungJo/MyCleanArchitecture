@@ -6,13 +6,13 @@ import com.example.domain.User;
 import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.DefaultSubscriber;
-import com.example.domain.interactor.GetUserDetailsUseCase;
 import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserDetailsView;
+import com.fernandocejas.frodo.annotation.RxLogSubscriber;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,7 +22,7 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class UserDetailsPresenter extends DefaultSubscriber<User> implements Presenter {
+public class UserDetailsPresenter implements Presenter {
 
     private int userId;
 
@@ -93,23 +93,26 @@ public class UserDetailsPresenter extends DefaultSubscriber<User> implements Pre
     }
 
     private void getUserDetails() {
-        this.getUserDetailsUseCase.execute(this);
+        this.getUserDetailsUseCase.execute(new UserDetailsSubscriber());
     }
 
-    @Override
-    public void onCompleted() {
-        this.hideViewLoading();
-    }
+    @RxLogSubscriber
+    private final class UserDetailsSubscriber extends DefaultSubscriber<User> {
+        @Override
+        public void onCompleted() {
+            UserDetailsPresenter.this.hideViewLoading();
+        }
 
-    @Override
-    public void onError(Throwable e) {
-        this.hideViewLoading();
-        this.showErrorMessage(new DefaultErrorBundle((Exception)e));
-        this.showViewRetry();
-    }
+        @Override
+        public void onError(Throwable e) {
+            UserDetailsPresenter.this.hideViewLoading();
+            UserDetailsPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            UserDetailsPresenter.this.showViewRetry();
+        }
 
-    @Override
-    public void onNext(User user) {
-        this.showUserDetailsInView(user);
+        @Override
+        public void onNext(User user) {
+            UserDetailsPresenter.this.showUserDetailsInView(user);
+        }
     }
 }

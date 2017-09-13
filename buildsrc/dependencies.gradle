@@ -18,13 +18,13 @@ ext {
     recyclerViewVersion = '25.0.+'
     appcompatVersion = '25.2.0'
     constraintVersion = '1.0.1'
-    rxJavaVersion = '1.0.12'
-    rxAndroidVersion = '0.24.0'
-    javaxAnnotationVersion = '10.0-b28'
+    rxJavaVersion = '1.0.14'
+    rxAndroidVersion = '1.0.1'
+    javaxAnnotationVersion = '1.0'
     gsonVersion = '2.3'
     designVersion = '25.2.0'
-    okHttpVersion = '2.3.0'
-    androidAnnotationsVersion = '20.0.0'
+    okHttpVersion = '2.5.0'
+    androidAnnotationsVersion = '23.0.1'
 
     presentationDependencies = [
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
@@ -33,7 +33,7 @@ ext {
             recyclerView   : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
             rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
             rxAndroid      : "io.reactivex:rxandroid:${rxAndroidVersion}",
-            javaxAnnotation: "org.glassfish:javax.annotation:${javaxAnnotationVersion}",
+            javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             butterKnifeCompiler : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
             appCompat : "com.android.support:appcompat-v7:${appcompatVersion}",
             constraint : "com.android.support.constraint:constraint-layout:${constraintVersion}",
@@ -44,6 +44,7 @@ ext {
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger         : "com.google.dagger:dagger:${daggerVersion}",
             rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
+            javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
     ]
 
     dataDependencies = [
@@ -53,7 +54,7 @@ ext {
             gson                : "com.google.code.gson:gson:${gsonVersion}",
             rxJava              : "io.reactivex:rxjava:${rxJavaVersion}",
             rxAndroid           : "io.reactivex:rxandroid:${rxAndroidVersion}",
-            javaxAnnotation     : "org.glassfish:javax.annotation:${javaxAnnotationVersion}",
+            javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations  : "com.android.support:support-annotations:${androidAnnotationsVersion}"
     ]
 }

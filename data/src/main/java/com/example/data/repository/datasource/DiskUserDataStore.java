@@ -20,12 +20,12 @@ public class DiskUserDataStore implements UserDataStore {
     }
 
     @Override
-    public Observable<List<UserEntity>> getUserEntityList() {
+    public Observable<List<UserEntity>> userEntityList() {
         throw new UnsupportedOperationException("Operation is not available!!!");
     }
 
     @Override
-    public Observable<UserEntity> getUserEntityDetails(final int userId) {
+    public Observable<UserEntity> userEntityDetails(final int userId) {
         return this.userCache.get(userId);
     }
 }

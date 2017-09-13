@@ -6,6 +6,8 @@ package com.example.domain.exeception;
 
 public class DefaultErrorBundle implements ErrorBundle {
 
+    private static final String DEFAULT_ERROR_MSG = "Unknown error";
+
     private final Exception exception;
 
     public DefaultErrorBundle(Exception exception) {
@@ -19,10 +21,6 @@ public class DefaultErrorBundle implements ErrorBundle {
 
     @Override
     public String getErrorMessage() {
-        String message = "";
-        if(this.exception != null) {
-            message = this.exception.getMessage();
-        }
-        return message;
+        return (exception != null) ? this.exception.getMessage() : DEFAULT_ERROR_MSG;
     }
 }

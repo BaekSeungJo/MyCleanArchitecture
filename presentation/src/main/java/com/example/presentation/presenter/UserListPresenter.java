@@ -6,7 +6,6 @@ import com.example.domain.User;
 import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.DefaultSubscriber;
-import com.example.domain.interactor.GetUserListUseCase;
 import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
@@ -25,7 +24,7 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class UserListPresenter extends DefaultSubscriber<List<User>> implements Presenter {
+public class UserListPresenter implements Presenter {
 
     private UserListView userListView;
     private final UseCase getUserListUseCase;
@@ -97,23 +96,25 @@ public class UserListPresenter extends DefaultSubscriber<List<User>> implements 
     }
 
     private void getUserList() {
-        this.getUserListUseCase.execute(this);
+        this.getUserListUseCase.execute(new UserListSubscriber());
     }
 
-    @Override
-    public void onCompleted() {
-        this.hideViewLoading();
-    }
+    private final class UserListSubscriber extends DefaultSubscriber<List<User>> {
+        @Override
+        public void onCompleted() {
+            UserListPresenter.this.hideViewLoading();
+        }
 
-    @Override
-    public void onError(Throwable e) {
-        this.hideViewLoading();
-        this.showErrorMessage(new DefaultErrorBundle((Exception) e));
-        this.showViewRetry();
-    }
+        @Override
+        public void onError(Throwable e) {
+            UserListPresenter.this.hideViewLoading();
+            UserListPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
+            UserListPresenter.this.showViewRetry();
+        }
 
-    @Override
-    public void onNext(List<User> users) {
-        this.showUsersCollectionView(users);
+        @Override
+        public void onNext(List<User> users) {
+            UserListPresenter.this.showUsersCollectionView(users);
+        }
     }
 }

@@ -7,12 +7,12 @@ import android.net.NetworkInfo;
 import com.example.data.entity.UserEntity;
 import com.example.data.entity.mapper.UserEntityJsonMapper;
 import com.example.data.exception.NetworkConnectionException;
+import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.net.MalformedURLException;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by plnc on 2017-06-08.
@@ -36,51 +36,46 @@ public class RestApiImpl implements RestApi {
      *
      * @return
      */
+    @RxLogObservable
     @Override
-    public Observable<List<UserEntity>> getUserEntityList() {
-        return Observable.create(new Observable.OnSubscribe<List<UserEntity>>() {
-
-            @Override
-            public void call(Subscriber<? super List<UserEntity>> subscriber) {
-                if(isThereInternetConnection()) {
-                    try {
-                        String responseUserEntities = getUserEntitiesFromApi();
-                        if(responseUserEntities != null) {
-                            subscriber.onNext(userEntityJsonMapper.transformUserEntityCollection(responseUserEntities));
-                            subscriber.onCompleted();
-                        } else {
-                            subscriber.onError(new NetworkConnectionException());
-                        }
-                    } catch(Exception e) {
-                        subscriber.onError(new NetworkConnectionException(e.getCause()));
+    public Observable<List<UserEntity>> userEntityList() {
+        return Observable.create(subscriber -> {
+            if(isThereInternetConnection()) {
+                try {
+                    String responseUserEntities = getUserEntitiesFromApi();
+                    if(responseUserEntities != null) {
+                        subscriber.onNext(userEntityJsonMapper.transformUserEntityCollection(responseUserEntities));
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new NetworkConnectionException());
                     }
-                } else {
-                    subscriber.onError(new NetworkConnectionException());
+                } catch(Exception e) {
+                    subscriber.onError(new NetworkConnectionException(e.getCause()));
                 }
+            } else {
+                subscriber.onError(new NetworkConnectionException());
             }
         });
     }
 
+    @RxLogObservable
     @Override
-    public Observable<UserEntity> getUserEntityById(final int userId) {
-        return Observable.create(new Observable.OnSubscribe<UserEntity>() {
-            @Override
-            public void call(Subscriber<? super UserEntity> subscriber) {
-                if(isThereInternetConnection()) {
-                    try {
-                        String responseUserDetails = getUserDetailsFromApi(userId);
-                        if(responseUserDetails != null) {
-                            subscriber.onNext(userEntityJsonMapper.transformUserEntity(responseUserDetails));
-                            subscriber.onCompleted();
-                        } else {
-                            subscriber.onError(new NetworkConnectionException());
-                        }
-                    } catch (Exception e) {
-                        subscriber.onError(new NetworkConnectionException(e.getCause()));
+    public Observable<UserEntity> userEntityById(final int userId) {
+        return Observable.create(subscriber -> {
+            if(isThereInternetConnection()) {
+                try {
+                    String responseUserDetails = getUserDetailsFromApi(userId);
+                    if(responseUserDetails != null) {
+                        subscriber.onNext(userEntityJsonMapper.transformUserEntity(responseUserDetails));
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new NetworkConnectionException());
                     }
-                } else {
-                    subscriber.onError(new NetworkConnectionException());
+                } catch (Exception e) {
+                    subscriber.onError(new NetworkConnectionException(e.getCause()));
                 }
+            } else {
+                subscriber.onError(new NetworkConnectionException());
             }
         });
     }

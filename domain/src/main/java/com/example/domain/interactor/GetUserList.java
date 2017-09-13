@@ -1,7 +1,5 @@
 package com.example.domain.interactor;
 
-import com.example.domain.User;
-import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.executor.ThreadExecutor;
 import com.example.domain.repository.UserRepository;
@@ -14,15 +12,20 @@ import rx.Observable;
  * Created by plnc on 2017-05-31.
  */
 
-public class GetUserDetailsUseCase extends UseCase{
+public class GetUserList extends UseCase {
 
-    private final int userId;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor of the class
+     *
+     * @param userRepository A {@link UserRepository} as a source for retrieving data.
+     * @param threadExecutor A {@link ThreadExecutor} used to execute this use case in a background thread.
+     * @param postExecutionThread A {@link PostExecutionThread} used to post updates when the use case has been executed.
+     */
     @Inject
-    public GetUserDetailsUseCase(int userId, UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    public GetUserList(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
-        this.userId = userId;
         this.userRepository = userRepository;
     }
 
@@ -33,6 +36,6 @@ public class GetUserDetailsUseCase extends UseCase{
      */
     @Override
     protected Observable buildUseCaseObservable() {
-        return this.userRepository.getUserDetail(userId);
+        return this.userRepository.users();
     }
 }

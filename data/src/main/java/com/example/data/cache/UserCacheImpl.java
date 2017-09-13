@@ -60,20 +60,17 @@ public class UserCacheImpl implements UserCache {
      * @param userId The user id  to retrive data
      */
     @Override
-    public synchronized Observable<UserEntity> get(final int userId) {
-        return Observable.create(new Observable.OnSubscribe<UserEntity>() {
-            @Override
-            public void call(Subscriber<? super UserEntity> subscriber) {
-                File userEntityFile = buildFile(userId);
-                String fileContent = fileManager.readFileContent(userEntityFile);
-                UserEntity userEntity = serializer.deserialize(fileContent);
+    public Observable<UserEntity> get(final int userId) {
+        return Observable.create(subscriber -> {
+            File userEntityFile = buildFile(userId);
+            String fileContent = fileManager.readFileContent(userEntityFile);
+            UserEntity userEntity = serializer.deserialize(fileContent);
 
-                if(userEntity != null) {
-                    subscriber.onNext(userEntity);
-                    subscriber.onCompleted();
-                } else {
-                    subscriber.onError(new UserNotFoundException());
-                }
+            if(userEntity != null) {
+                subscriber.onNext(userEntity);
+                subscriber.onCompleted();
+            } else {
+                subscriber.onError(new UserNotFoundException());
             }
         });
     }

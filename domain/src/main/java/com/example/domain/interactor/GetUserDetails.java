@@ -12,20 +12,15 @@ import rx.Observable;
  * Created by plnc on 2017-05-31.
  */
 
-public class GetUserListUseCase extends UseCase {
+public class GetUserDetails extends UseCase{
 
+    private final int userId;
     private final UserRepository userRepository;
 
-    /**
-     * Constructor of the class
-     *
-     * @param userRepository A {@link UserRepository} as a source for retrieving data.
-     * @param threadExecutor A {@link ThreadExecutor} used to execute this use case in a background thread.
-     * @param postExecutionThread A {@link PostExecutionThread} used to post updates when the use case has been executed.
-     */
     @Inject
-    public GetUserListUseCase(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    public GetUserDetails(int userId, UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
+        this.userId = userId;
         this.userRepository = userRepository;
     }
 
@@ -36,6 +31,6 @@ public class GetUserListUseCase extends UseCase {
      */
     @Override
     protected Observable buildUseCaseObservable() {
-        return this.userRepository.getUsers();
+        return this.userRepository.user(userId);
     }
 }
