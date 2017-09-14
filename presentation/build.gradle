@@ -42,27 +42,8 @@ android {
 }
 
 dependencies {
-//    def domainLayer = project(':domain')
-//    def dataLayer = project(':data')
-//
-//    compile domainLayer
-//    compile dataLayer
-//
-//    //library dependencies
-//
-//    compile 'com.google.dagger:dagger:2.4'
-//    annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
-//
-//    compile 'com.jakewharton:butterknife:8.8.1'
-//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-//    compile 'com.android.support:recyclerview-v7:25.0.+'
-//    compile 'com.android.support:appcompat-v7:25.2.0'
-//    compile 'com.android.support.constraint:constraint-layout:1.0.1'
-//    compile 'com.android.support:design:25.2.0'
-//    compile 'io.reactivex:rxjava:1.0.3'
-//    compile 'io.reactivex:rxandroid:0.23.0'
-
     def presentationDependencies = rootProject.ext.presentationDependencies
+    def developmentDependencies = rootProject.ext.developmentDependencies
 
     compile project(':domain')
     compile project(':data')
@@ -77,4 +58,7 @@ dependencies {
     compile presentationDependencies.design
     compile presentationDependencies.rxJava
     compile presentationDependencies.rxAndroid
+
+    debugCompile developmentDependencies.leakCanaryDebug
+    releaseCompile developmentDependencies.leakCanaryRelease
 }

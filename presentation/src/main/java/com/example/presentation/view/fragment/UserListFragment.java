@@ -54,7 +54,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     private UserListListener userListListener;
 
     public UserListFragment() {
-        super();
+        setRetainInstance(true);
     }
 
     @Override
@@ -65,14 +65,27 @@ public class UserListFragment extends BaseFragment implements UserListView {
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.getComponent(UserComponent.class).inject(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_user_list, container, true);
+        final View fragmentView = inflater.inflate(R.layout.fragment_user_list, container, false);
         unbinder = ButterKnife.bind(this, fragmentView);
         setupUI();
 
         return fragmentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.userListPresenter.setView(this);
+        this.loadUserList();
     }
 
     private void setupUI() {
@@ -83,13 +96,6 @@ public class UserListFragment extends BaseFragment implements UserListView {
         this.userAdapter.setOnItemClickListener(onItemClickListener);
         this.rv_users.setAdapter(userAdapter);
 
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.initialize();
-        this.loadUserList();
     }
 
     @Override
@@ -158,7 +164,7 @@ public class UserListFragment extends BaseFragment implements UserListView {
     }
 
     @Override
-    public Context getContext() {
+    public Context context() {
         return this.getActivity().getApplicationContext();
     }
 
@@ -179,10 +185,4 @@ public class UserListFragment extends BaseFragment implements UserListView {
             }
         }
     };
-
-    private void initialize() {
-        this.getComponent(UserComponent.class).inject(this);
-        this.userListPresenter.setView(this);
-    }
-
 }

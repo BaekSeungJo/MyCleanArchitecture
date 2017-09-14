@@ -49,10 +49,10 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @BindView(R.id.bt_retry) Button bt_retry;
 
     public UserDetailsFragment() {
-        super();
+        setRetainInstance(true);
     }
 
-    public static UserDetailsFragment newInstanace(int userId) {
+    public static UserDetailsFragment create(int userId) {
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
 
         Bundle argumentsBundle = new Bundle();
@@ -62,19 +62,28 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         return userDetailsFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.getComponent(UserComponent.class).inject(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
+        final View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
         unbinder = ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.initialize();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.userDetailsPresenter.setView(this);
+        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
+        this.userDetailsPresenter.initialize(this.userId);
     }
 
     @Override
@@ -140,7 +149,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     }
 
     @Override
-    public Context getContext() {
+    public Context context() {
         return getActivity().getApplicationContext();
     }
 
@@ -153,12 +162,5 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     @OnClick(R.id.bt_retry)
     void onButtonRetryClick() {
         this.loadUserDetails();
-    }
-
-    private void initialize() {
-        this.getComponent(UserComponent.class).inject(this);
-        this.userDetailsPresenter.setView(this);
-        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
-        this.userDetailsPresenter.initialize(this.userId);
     }
 }

@@ -18,5 +18,9 @@ public interface LoadDataView {
 
     void showError(String message);
 
-    Context getContext();
+    /**
+     * Get a {@link android.content.Context}
+     * @return
+     */
+    Context context();
 }

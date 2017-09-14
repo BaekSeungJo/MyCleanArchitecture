@@ -53,6 +53,7 @@ public class UserDetailsPresenter implements Presenter {
     @Override
     public void destroy() {
         this.getUserDetailsUseCase.unsubscribe();
+        this.viewDetailsView = null;
     }
 
     public void initialize(int userId) {
@@ -83,7 +84,7 @@ public class UserDetailsPresenter implements Presenter {
     }
 
     private void showErrorMessage(ErrorBundle errorBundle) {
-        String errorMessage = ErrorMessageFactory.create(this.viewDetailsView.getContext(), errorBundle.getException());
+        String errorMessage = ErrorMessageFactory.create(this.viewDetailsView.context(), errorBundle.getException());
         this.viewDetailsView.showError(errorMessage);
     }
 

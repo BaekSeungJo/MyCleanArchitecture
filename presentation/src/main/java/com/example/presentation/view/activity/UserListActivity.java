@@ -28,6 +28,10 @@ public class UserListActivity extends BaseActivity implements HasComponent<UserC
         setContentView(R.layout.activity_user_list);
 
         this.initializeInjector();
+
+        if(savedInstanceState == null) {
+            addFragment(R.id.fragmentContainer, new UserListFragment());
+        }
     }
 
     private void initializeInjector() {

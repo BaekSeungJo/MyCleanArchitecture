@@ -26,7 +26,7 @@ import javax.inject.Named;
 @PerActivity
 public class UserListPresenter implements Presenter {
 
-    private UserListView userListView;
+    private UserListView viewListView;
     private final UseCase getUserListUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
@@ -36,8 +36,8 @@ public class UserListPresenter implements Presenter {
         this.userModelDataMapper = userModelDataMapper;
     }
 
-    public void setView(@NonNull UserListView userListView) {
-        this.userListView = userListView;
+    public void setView(@NonNull UserListView viewListView) {
+        this.viewListView = viewListView;
     }
 
     @Override
@@ -53,6 +53,7 @@ public class UserListPresenter implements Presenter {
     @Override
     public void destroy() {
         this.getUserListUseCase.unsubscribe();
+        this.viewListView = null;
     }
 
     public void initialize() {
@@ -66,33 +67,33 @@ public class UserListPresenter implements Presenter {
     }
 
     public void onUserClicked(UserModel userModel) {
-        this.userListView.viewUser(userModel);
+        this.viewListView.viewUser(userModel);
     }
 
     private void showViewLoading() {
-        this.userListView.showLoading();
+        this.viewListView.showLoading();
     }
 
     private void hideViewLoading() {
-        this.userListView.hideLoading();
+        this.viewListView.hideLoading();
     }
 
     private void showViewRetry() {
-        this.userListView.showRetry();
+        this.viewListView.showRetry();
     }
 
     private void hideViewRetry() {
-        this.userListView.hideRetry();
+        this.viewListView.hideRetry();
     }
 
     private void showErrorMessage(ErrorBundle errorBundle) {
-        String errorMessage = ErrorMessageFactory.create(this.userListView.getContext(), errorBundle.getException());
-        this.userListView.showError(errorMessage);
+        String errorMessage = ErrorMessageFactory.create(this.viewListView.context(), errorBundle.getException());
+        this.viewListView.showError(errorMessage);
     }
 
     private void showUsersCollectionView(Collection<User> usersCollection) {
         final Collection<UserModel> userModelCollection = this.userModelDataMapper.transform(usersCollection);
-        this.userListView.renderUserList(userModelCollection);
+        this.viewListView.renderUserList(userModelCollection);
     }
 
     private void getUserList() {

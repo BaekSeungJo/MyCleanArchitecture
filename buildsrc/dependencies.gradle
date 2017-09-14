@@ -26,6 +26,9 @@ ext {
     okHttpVersion = '2.5.0'
     androidAnnotationsVersion = '23.0.1'
 
+    //Development
+    leakCanaryVersion = '1.5.2'
+
     presentationDependencies = [
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger         : "com.google.dagger:dagger:${daggerVersion}",
@@ -56,5 +59,10 @@ ext {
             rxAndroid           : "io.reactivex:rxandroid:${rxAndroidVersion}",
             javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations  : "com.android.support:support-annotations:${androidAnnotationsVersion}"
+    ]
+
+    developmentDependencies = [
+            leakCanaryDebug          : "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
+            leakCanaryRelease        : "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",
     ]
 }
