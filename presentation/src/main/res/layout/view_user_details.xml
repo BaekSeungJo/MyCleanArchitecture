@@ -12,7 +12,9 @@
 
     <TextView
         android:id="@+id/tv_fullname"
-        style="@style/AppTheme.TextViewHolder"/>
+        style="@style/AppTheme.TextViewHolder"
+        android:freezesText="true"
+        />
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,21 +26,26 @@
 
         <TextView
             style="@style/AppTheme.TextViewTitle"
-            android:text="@string/view_text_email"/>
+            android:text="@string/view_text_email"
+            android:freezesText="true"
+            />
 
         <TextView
             android:id="@+id/tv_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:freezesText="true"/>
 
         <TextView
             style="@style/AppTheme.TextViewTitle"
-            android:text="@string/view_text_followers"/>
+            android:text="@string/view_text_followers"
+            android:freezesText="true"/>
 
         <TextView
             android:id="@+id/tv_followers"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:freezesText="true"/>
 
         <TextView
             style="@style/AppTheme.TextViewTitle"
@@ -47,7 +54,8 @@
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:freezesText="true"/>
     </LinearLayout>
 
 </LinearLayout>

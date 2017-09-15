@@ -24,8 +24,6 @@ import javax.inject.Named;
 @PerActivity
 public class UserDetailsPresenter implements Presenter {
 
-    private int userId;
-
     private UserDetailsView viewDetailsView;
     private final UseCase getUserDetailsUseCase;
     private final UserModelDataMapper userModelDataMapper;
@@ -56,8 +54,7 @@ public class UserDetailsPresenter implements Presenter {
         this.viewDetailsView = null;
     }
 
-    public void initialize(int userId) {
-        this.userId =userId;
+    public void initialize() {
         this.loadUserDetails();
     }
 

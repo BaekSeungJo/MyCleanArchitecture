@@ -27,7 +27,7 @@ ext {
     androidAnnotationsVersion = '23.0.1'
 
     //Development
-    leakCanaryVersion = '1.5.2'
+    leakCanaryVersion = '1.5.1'
 
     presentationDependencies = [
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",

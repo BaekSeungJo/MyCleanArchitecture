@@ -9,10 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.presentation.R;
+import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.model.UserModel;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,6 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by plnc on 2017-06-27.
  */
+@PerActivity
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
     private OnItemClickListener onItemClickListener;
@@ -31,11 +36,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     private List<UserModel> usersCollection;
     private final LayoutInflater layoutInflater;
 
-    public UsersAdapter(Context context, Collection<UserModel> usersCollection) {
-        this.validateUsersCollection(usersCollection);
+    @Inject
+    public UsersAdapter(Context context) {
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.usersCollection = (List<UserModel>) usersCollection;
-
+        this.usersCollection = Collections.emptyList();
     }
 
     @Override
@@ -46,9 +50,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     @Override
     public UsersAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = this.layoutInflater.inflate(R.layout.row_user, parent, false);
-        UserViewHolder userViewHolder = new UserViewHolder(view);
-
-        return userViewHolder;
+        return new UserViewHolder(view);
     }
 
     @Override

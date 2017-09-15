@@ -176,7 +176,6 @@ public class AutoLoadImageView extends AppCompatImageView {
         }
     }
 
-
     private static class DiskCache {
 
         private static final String TAG = "DiskCache";

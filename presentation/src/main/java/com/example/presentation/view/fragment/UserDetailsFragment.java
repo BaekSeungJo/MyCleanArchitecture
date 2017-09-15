@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.presentation.R;
-import com.example.presentation.internal.di.components.DaggerUserComponent;
 import com.example.presentation.internal.di.components.UserComponent;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserDetailsPresenter;
@@ -31,10 +30,6 @@ import butterknife.Unbinder;
 
 public class UserDetailsFragment extends BaseFragment implements UserDetailsView {
 
-    private static final String ARGUMENT_KEY_USER_ID = "org.android10.ARGUMENT_USER_ID";
-
-    private int userId;
-
     private Unbinder unbinder;
 
     @Inject UserDetailsPresenter userDetailsPresenter;
@@ -52,11 +47,10 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         setRetainInstance(true);
     }
 
-    public static UserDetailsFragment create(int userId) {
+    public static UserDetailsFragment create() {
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
 
         Bundle argumentsBundle = new Bundle();
-        argumentsBundle.putInt(ARGUMENT_KEY_USER_ID, userId);
         userDetailsFragment.setArguments(argumentsBundle);
 
         return userDetailsFragment;
@@ -73,17 +67,16 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View fragmentView = inflater.inflate(R.layout.fragment_user_details, container, false);
         unbinder = ButterKnife.bind(this, fragmentView);
-
         return fragmentView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         this.userDetailsPresenter.setView(this);
-        this.userId = getArguments().getInt(ARGUMENT_KEY_USER_ID);
-        this.userDetailsPresenter.initialize(this.userId);
+        if(savedInstanceState == null) {
+            this.loadUserDetails();
+        }
     }
 
     @Override
@@ -155,7 +148,7 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
 
     private void loadUserDetails() {
         if(this.userDetailsPresenter != null) {
-            this.userDetailsPresenter.initialize(this.userId);
+            this.userDetailsPresenter.initialize();
         }
     }
 
