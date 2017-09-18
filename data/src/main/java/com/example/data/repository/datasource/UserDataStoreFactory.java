@@ -43,8 +43,8 @@ public class UserDataStoreFactory {
     }
 
     public UserDataStore createCloudDataStore() {
-        UserEntityJsonMapper userEntityJsonMapper = new UserEntityJsonMapper();
-        RestApi restApi = new RestApiImpl(context, userEntityJsonMapper);
+        final UserEntityJsonMapper userEntityJsonMapper = new UserEntityJsonMapper();
+        final RestApi restApi = new RestApiImpl(context, userEntityJsonMapper);
 
         return new CloudUserDataStore(restApi, userCache);
     }

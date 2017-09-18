@@ -7,12 +7,12 @@ import android.net.NetworkInfo;
 import com.example.data.entity.UserEntity;
 import com.example.data.entity.mapper.UserEntityJsonMapper;
 import com.example.data.exception.NetworkConnectionException;
-import com.fernandocejas.frodo.annotation.RxLogObservable;
 
 import java.net.MalformedURLException;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by plnc on 2017-06-08.
@@ -36,46 +36,44 @@ public class RestApiImpl implements RestApi {
      *
      * @return
      */
-    @RxLogObservable
     @Override
     public Observable<List<UserEntity>> userEntityList() {
-        return Observable.create(subscriber -> {
+        return Observable.create(emitter -> {
             if(isThereInternetConnection()) {
                 try {
                     String responseUserEntities = getUserEntitiesFromApi();
                     if(responseUserEntities != null) {
-                        subscriber.onNext(userEntityJsonMapper.transformUserEntityCollection(responseUserEntities));
-                        subscriber.onCompleted();
+                        emitter.onNext(userEntityJsonMapper.transformUserEntityCollection(responseUserEntities));
+                        emitter.onComplete();
                     } else {
-                        subscriber.onError(new NetworkConnectionException());
+                        emitter.onError(new NetworkConnectionException());
                     }
                 } catch(Exception e) {
-                    subscriber.onError(new NetworkConnectionException(e.getCause()));
+                    emitter.onError(new NetworkConnectionException(e.getCause()));
                 }
             } else {
-                subscriber.onError(new NetworkConnectionException());
+                emitter.onError(new NetworkConnectionException());
             }
         });
     }
 
-    @RxLogObservable
     @Override
     public Observable<UserEntity> userEntityById(final int userId) {
-        return Observable.create(subscriber -> {
+        return Observable.create(emitter -> {
             if(isThereInternetConnection()) {
                 try {
                     String responseUserDetails = getUserDetailsFromApi(userId);
                     if(responseUserDetails != null) {
-                        subscriber.onNext(userEntityJsonMapper.transformUserEntity(responseUserDetails));
-                        subscriber.onCompleted();
+                        emitter.onNext(userEntityJsonMapper.transformUserEntity(responseUserDetails));
+                        emitter.onComplete();
                     } else {
-                        subscriber.onError(new NetworkConnectionException());
+                        emitter.onError(new NetworkConnectionException());
                     }
                 } catch (Exception e) {
-                    subscriber.onError(new NetworkConnectionException(e.getCause()));
+                    emitter.onError(new NetworkConnectionException(e.getCause()));
                 }
             } else {
-                subscriber.onError(new NetworkConnectionException());
+                emitter.onError(new NetworkConnectionException());
             }
         });
     }

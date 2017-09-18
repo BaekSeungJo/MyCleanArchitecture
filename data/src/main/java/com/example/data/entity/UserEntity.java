@@ -42,52 +42,20 @@ public class UserEntity {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
 
     public String getFullname() {
         return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getFollowers() {
         return followers;
     }
 
-    public void setFollowers(int followers) {
-        this.followers = followers;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("UserEntity{");
-        sb.append("userId=").append(userId);
-        sb.append(", coverUrl='").append(coverUrl).append('\'');
-        sb.append(", fullname='").append(fullname).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", followers=").append(followers);
-        sb.append(", email='").append(email).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 }

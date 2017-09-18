@@ -1,11 +1,10 @@
 package com.example.data.net;
 
 import com.example.data.entity.UserEntity;
-
-import java.util.Collection;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by plnc on 2017-06-08.
@@ -19,13 +18,13 @@ public interface RestApi {
     String API_URL_GET_USER_DETAILS = API_BASE_URL + "user_";
 
     /**
-     * Retrives an {@link rx.Observable} which will emit a List of {@link UserEntity}.
+     * Retrives an {@link Observable} which will emit a List of {@link UserEntity}.
      * @return
      */
     Observable<List<UserEntity>> userEntityList();
 
     /**
-     * Retrives an {@link rx.Observable} which will emit a {@link UserEntity}.
+     * Retrives an {@link Observable} which will emit a {@link UserEntity}.
      *
      * @param userId The user id used to get user data.
      */

@@ -1,9 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.fernandocejas.frodo'
-
-frodo {
-    enabled = true
-}
 
 android {
     def globalConfiguration = rootProject.extensions.getByName("ext")

@@ -3,16 +3,19 @@ package com.example.domain.interactor;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.executor.ThreadExecutor;
 import com.example.domain.repository.UserRepository;
+import com.fernandocejas.arrow.optional.Optional;
 
 import javax.inject.Inject;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by plnc on 2017-05-31.
  */
 
 public class GetUserList extends UseCase {
+
+    public static final String NAME = "userList";
 
     private final UserRepository userRepository;
 
@@ -24,7 +27,7 @@ public class GetUserList extends UseCase {
      * @param postExecutionThread A {@link PostExecutionThread} used to post updates when the use case has been executed.
      */
     @Inject
-    public GetUserList(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    GetUserList(UserRepository userRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.userRepository = userRepository;
     }
@@ -35,7 +38,7 @@ public class GetUserList extends UseCase {
      * @return
      */
     @Override
-    protected Observable buildUseCaseObservable() {
+    protected Observable buildUseCaseObservable(Optional<Params> params) {
         return this.userRepository.users();
     }
 }

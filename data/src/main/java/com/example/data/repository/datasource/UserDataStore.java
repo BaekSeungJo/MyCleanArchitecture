@@ -1,11 +1,9 @@
 package com.example.data.repository.datasource;
 
 import com.example.data.entity.UserEntity;
-
-import java.util.Collection;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by plnc on 2017-06-09.
@@ -14,14 +12,14 @@ import rx.Observable;
 public interface UserDataStore {
 
     /**
-     * Get an {@link rx.Observable} which will emit a List of {@link UserEntity}
+     * Get an {@link Observable} which will emit a List of {@link UserEntity}
      * @return
      */
     Observable<List<UserEntity>> userEntityList();
 
 
     /**
-     * Get an {@link rx.Observable} which will emit a {@link UserEntity} by its id.
+     * Get an {@link Observable} which will emit a {@link UserEntity} by its id.
      *
      * @param userId
      * @return

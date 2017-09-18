@@ -2,7 +2,7 @@ package com.example.data.cache;
 
 import android.content.Context;
 
-import com.example.data.cache.serializer.JsonSerializer;
+import com.example.data.cache.serializer.Serializer;
 import com.example.data.entity.UserEntity;
 import com.example.data.exception.UserNotFoundException;
 import com.example.domain.executor.ThreadExecutor;
@@ -12,8 +12,7 @@ import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
 
 /**
  * {@link UserCache} implementation.
@@ -29,7 +28,7 @@ public class UserCacheImpl implements UserCache {
 
     private final Context context;
     private final File cacheDir;
-    private final JsonSerializer serializer;
+    private final Serializer serializer;
     private final FileManager fileManager;
     private final ThreadExecutor threadExecutor;
 
@@ -37,19 +36,19 @@ public class UserCacheImpl implements UserCache {
      * Constructor of the class {@link UserCacheImpl}
      *
      * @param context A
-     * @param userCacheSerializer {@link JsonSerializer} for object serialization.
+     * @param serializer {@link Serializer} for object serialization.
      * @param fileManager {@link FileManager} for saving serialized objects to the file system.
      * @param executor
      */
     @Inject
-    public UserCacheImpl(Context context, JsonSerializer userCacheSerializer,
+    UserCacheImpl(Context context, Serializer serializer,
                           FileManager fileManager, ThreadExecutor executor) {
-        if(context == null || userCacheSerializer == null || fileManager == null || executor == null) {
+        if(context == null || serializer == null || fileManager == null || executor == null) {
             throw new IllegalArgumentException("Invalid null parametaer");
         }
         this.context = context;
         this.cacheDir = this.context.getCacheDir();
-        this.serializer = userCacheSerializer;
+        this.serializer = serializer;
         this.fileManager = fileManager;
         this.threadExecutor = executor;
     }
@@ -61,16 +60,17 @@ public class UserCacheImpl implements UserCache {
      */
     @Override
     public Observable<UserEntity> get(final int userId) {
-        return Observable.create(subscriber -> {
-            File userEntityFile = buildFile(userId);
-            String fileContent = fileManager.readFileContent(userEntityFile);
-            UserEntity userEntity = serializer.deserialize(fileContent);
+        return Observable.create(emitter -> {
+            final File userEntityFile = buildFile(userId);
+            final String fileContent = UserCacheImpl.this.fileManager.readFileContent(userEntityFile);
+            final UserEntity userEntity =
+                    UserCacheImpl.this.serializer.deserialize(fileContent, UserEntity.class);
 
             if(userEntity != null) {
-                subscriber.onNext(userEntity);
-                subscriber.onCompleted();
+                emitter.onNext(userEntity);
+                emitter.onComplete();
             } else {
-                subscriber.onError(new UserNotFoundException());
+                emitter.onError(new UserNotFoundException());
             }
         });
     }
@@ -78,9 +78,9 @@ public class UserCacheImpl implements UserCache {
     @Override
     public void put(UserEntity userEntity) {
         if(userEntity != null) {
-            File userEntityFile = buildFile(userEntity.getUserId());
+            final File userEntityFile = buildFile(userEntity.getUserId());
             if(!isCached(userEntity.getUserId())) {
-                String jsonString = serializer.serialize(userEntity);
+                String jsonString = serializer.serialize(userEntity, UserEntity.class);
                 executeAsynchronously(new CacheWriter(this.fileManager, userEntityFile, jsonString));
                 setLastCacheUpdateTimeMillis();
             }
@@ -89,8 +89,8 @@ public class UserCacheImpl implements UserCache {
 
     @Override
     public boolean isCached(int userId) {
-        File userEntityFile = buildFile(userId);
-        return fileManager.exists(userEntityFile);
+        final File userEntityFile = buildFile(userId);
+        return this.fileManager.exists(userEntityFile);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class UserCacheImpl implements UserCache {
     }
 
     private File buildFile(int userId) {
-        StringBuilder fileNameBuilder = new StringBuilder();
+        final StringBuilder fileNameBuilder = new StringBuilder();
         fileNameBuilder.append(this.cacheDir.getPath());
         fileNameBuilder.append(File.separator);
         fileNameBuilder.append(DEFAULT_FILE_NAME);
@@ -127,7 +127,7 @@ public class UserCacheImpl implements UserCache {
     }
 
     private void setLastCacheUpdateTimeMillis() {
-        long currentMillis = System.currentTimeMillis();
+        final long currentMillis = System.currentTimeMillis();
         fileManager.writeToPreference(context, SETTINGS_FILE_NAME, SETTINGS_LAST_CACHE_UPDATE, currentMillis);
     }
 

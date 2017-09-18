@@ -2,10 +2,9 @@ package com.example.data.repository.datasource;
 
 import com.example.data.cache.UserCache;
 import com.example.data.entity.UserEntity;
-
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by plnc on 2017-06-09.

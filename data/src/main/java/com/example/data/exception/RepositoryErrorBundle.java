@@ -6,11 +6,11 @@ import com.example.domain.exeception.ErrorBundle;
  * Created by plnc on 2017-06-09.
  */
 
-public class RepositoryErrorBundle implements ErrorBundle {
+class RepositoryErrorBundle implements ErrorBundle {
 
     private final Exception exception;
 
-    public RepositoryErrorBundle(Exception exception) {
+    RepositoryErrorBundle(Exception exception) {
         this.exception = exception;
     }
 

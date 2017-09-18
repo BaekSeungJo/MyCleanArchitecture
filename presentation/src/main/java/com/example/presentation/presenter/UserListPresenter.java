@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import com.example.domain.User;
 import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
-import com.example.domain.interactor.DefaultSubscriber;
+import com.example.domain.interactor.DefaultObserver;
+import com.example.domain.interactor.GetUserList;
+import com.example.domain.interactor.Params;
 import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
@@ -31,7 +33,7 @@ public class UserListPresenter implements Presenter {
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserListPresenter(@Named("userList") UseCase getUserListUseCase,
+    public UserListPresenter(@Named(GetUserList.NAME) UseCase getUserListUseCase,
                              UserModelDataMapper userModelDataMapper) {
         this.getUserListUseCase = getUserListUseCase;
         this.userModelDataMapper = userModelDataMapper;
@@ -98,10 +100,10 @@ public class UserListPresenter implements Presenter {
     }
 
     private void getUserList() {
-        this.getUserListUseCase.execute(new UserListSubscriber());
+        this.getUserListUseCase.execute(new UserListObserver(), Params.EMPTY);
     }
 
-    private final class UserListSubscriber extends DefaultSubscriber<List<User>> {
+    private final class UserListObserver extends DefaultObserver<List<User>> {
         @Override
         public void onCompleted() {
             UserListPresenter.this.hideViewLoading();

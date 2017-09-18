@@ -28,7 +28,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void addFragment(int containerViewId, Fragment fragment) {
-        FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = this.getSupportFragmentManager().beginTransaction();
         ft.add(containerViewId, fragment);
         ft.commit();
     }

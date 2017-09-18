@@ -1,6 +1,7 @@
 package com.example.presentation.view.fragment;
 
 import android.content.Context;
+import android.gesture.Prediction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.example.presentation.model.UserModel;
 import com.example.presentation.presenter.UserDetailsPresenter;
 import com.example.presentation.view.UserDetailsView;
 import com.example.presentation.view.component.AutoLoadImageView;
+import com.fernandocejas.arrow.checks.Preconditions;
 
 import javax.inject.Inject;
 
@@ -29,6 +31,7 @@ import butterknife.Unbinder;
  */
 
 public class UserDetailsFragment extends BaseFragment implements UserDetailsView {
+    private static final String PARAM_USER_ID = "param_user_id";
 
     private Unbinder unbinder;
 
@@ -47,12 +50,11 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
         setRetainInstance(true);
     }
 
-    public static UserDetailsFragment create() {
+    public static UserDetailsFragment forUser(int userId) {
         UserDetailsFragment userDetailsFragment = new UserDetailsFragment();
-
-        Bundle argumentsBundle = new Bundle();
-        userDetailsFragment.setArguments(argumentsBundle);
-
+        Bundle arguments = new Bundle();
+        arguments.putInt(PARAM_USER_ID, userId);
+        userDetailsFragment.setArguments(arguments);
         return userDetailsFragment;
     }
 
@@ -148,9 +150,16 @@ public class UserDetailsFragment extends BaseFragment implements UserDetailsView
 
     private void loadUserDetails() {
         if(this.userDetailsPresenter != null) {
-            this.userDetailsPresenter.initialize();
+            this.userDetailsPresenter.initialize(currentUserId());
         }
     }
+
+    private int currentUserId() {
+        final Bundle arguments = getArguments();
+        Preconditions.checkNotNull(arguments, "Fragment arguments cannot be null");
+        return arguments.getInt(PARAM_USER_ID);
+    }
+
 
     @OnClick(R.id.bt_retry)
     void onButtonRetryClick() {

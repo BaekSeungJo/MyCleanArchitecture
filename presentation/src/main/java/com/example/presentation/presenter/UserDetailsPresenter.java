@@ -5,14 +5,15 @@ import android.support.annotation.NonNull;
 import com.example.domain.User;
 import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
-import com.example.domain.interactor.DefaultSubscriber;
+import com.example.domain.interactor.DefaultObserver;
+import com.example.domain.interactor.GetUserDetails;
+import com.example.domain.interactor.Params;
 import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
 import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserDetailsView;
-import com.fernandocejas.frodo.annotation.RxLogSubscriber;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,7 +30,7 @@ public class UserDetailsPresenter implements Presenter {
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserDetailsPresenter(@Named("userDetails") UseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
+    public UserDetailsPresenter(@Named(GetUserDetails.NAME) UseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserDetailsUseCase = getUserDetailsUseCase;
         this.userModelDataMapper = userModelDataMapper;
     }
@@ -54,14 +55,10 @@ public class UserDetailsPresenter implements Presenter {
         this.viewDetailsView = null;
     }
 
-    public void initialize() {
-        this.loadUserDetails();
-    }
-
-    private void loadUserDetails() {
+    public void initialize(int userId) {
         this.hideViewRetry();
         this.showViewLoading();
-        this.getUserDetails();
+        this.getUserDetails(userId);
     }
 
     private void showViewLoading() {
@@ -90,12 +87,13 @@ public class UserDetailsPresenter implements Presenter {
         this.viewDetailsView.renderUser(userModel);
     }
 
-    private void getUserDetails() {
-        this.getUserDetailsUseCase.execute(new UserDetailsSubscriber());
+    private void getUserDetails(int userId) {
+        final Params params = Params.create();
+        params.putInt(GetUserDetails.PARAM_USER_ID_KEY, userId);
+        this.getUserDetailsUseCase.execute(new UserDetailsObserver(), params);
     }
 
-    @RxLogSubscriber
-    private final class UserDetailsSubscriber extends DefaultSubscriber<User> {
+    private final class UserDetailsObserver extends DefaultObserver<User> {
         @Override
         public void onCompleted() {
             UserDetailsPresenter.this.hideViewLoading();

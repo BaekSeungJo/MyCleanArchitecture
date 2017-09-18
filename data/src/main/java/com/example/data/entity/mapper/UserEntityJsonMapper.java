@@ -24,27 +24,13 @@ public class UserEntityJsonMapper {
     }
 
     public UserEntity transformUserEntity(String userJsonResponse) throws JsonSyntaxException {
-        try {
-            Type userEntityType = new TypeToken<UserEntity>(){}.getType();
-            UserEntity userEntity = gson.fromJson(userJsonResponse, userEntityType);
-
-            return userEntity;
-        } catch (JsonSyntaxException jsonException) {
-            throw jsonException;
-        }
+        final Type userEntityType = new TypeToken<UserEntity>(){}.getType();
+        return this.gson.fromJson(userJsonResponse, userEntityType);
     }
 
     public List<UserEntity> transformUserEntityCollection(String userListJsonResponse)
         throws JsonSyntaxException {
-        List<UserEntity> userEntityCollection;
-
-        try {
-            Type listOfUserEntityType = new TypeToken<List<UserEntity>>(){}.getType();
-            userEntityCollection = this.gson.fromJson(userListJsonResponse, listOfUserEntityType);
-
-            return userEntityCollection;
-        } catch (JsonSyntaxException jsonException) {
-            throw jsonException;
-        }
+        final Type listOfUserEntityType = new TypeToken<List<UserEntity>>(){}.getType();
+        return this.gson.fromJson(userListJsonResponse, listOfUserEntityType);
     }
 }

@@ -6,8 +6,7 @@ import com.example.data.net.RestApi;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Action1;
+import io.reactivex.Observable;
 
 /**
  * Created by plnc on 2017-06-12.
@@ -16,12 +15,6 @@ class CloudUserDataStore implements UserDataStore {
 
     private final RestApi restApi;
     private final UserCache userCache;
-
-    private final Action1<UserEntity> saveToCacheAction = userEntity -> {
-        if(userEntity != null) {
-            CloudUserDataStore.this.userCache.put(userEntity);
-        }
-    };
 
     CloudUserDataStore(RestApi restApi, UserCache userCache) {
         this.restApi = restApi;
@@ -41,6 +34,6 @@ class CloudUserDataStore implements UserDataStore {
      */
     @Override
     public Observable<UserEntity> userEntityDetails(int userId) {
-        return this.restApi.userEntityById(userId).doOnNext(saveToCacheAction);
+        return this.restApi.userEntityById(userId).doOnNext(CloudUserDataStore.this.userCache::put);
     }
 }

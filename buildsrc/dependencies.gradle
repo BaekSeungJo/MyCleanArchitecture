@@ -13,18 +13,19 @@ ext {
     androidCompileSdkVersion = 25
 
     //Libraries
-    daggerVersion = '2.4'
+    daggerVersion = '2.8'
     butterKnifeVersion = '8.8.1'
     recyclerViewVersion = '25.0.+'
     appcompatVersion = '25.2.0'
     constraintVersion = '1.0.1'
-    rxJavaVersion = '1.0.14'
-    rxAndroidVersion = '1.0.1'
+    rxJavaVersion = '2.0.2'
+    rxAndroidVersion = '2.0.1'
     javaxAnnotationVersion = '1.0'
     gsonVersion = '2.3'
     designVersion = '25.2.0'
     okHttpVersion = '2.5.0'
     androidAnnotationsVersion = '23.0.1'
+    arrowVersion = '1.0.0'
 
     //Development
     leakCanaryVersion = '1.5.1'
@@ -34,20 +35,22 @@ ext {
             dagger         : "com.google.dagger:dagger:${daggerVersion}",
             butterKnife    : "com.jakewharton:butterknife:${butterKnifeVersion}",
             recyclerView   : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
-            rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
-            rxAndroid      : "io.reactivex:rxandroid:${rxAndroidVersion}",
+            rxJava         : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid      : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             javaxAnnotation: "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             butterKnifeCompiler : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
             appCompat : "com.android.support:appcompat-v7:${appcompatVersion}",
             constraint : "com.android.support.constraint:constraint-layout:${constraintVersion}",
             design : "com.android.support:design:${designVersion}",
+            arrow          : "com.fernandocejas:arrow:${arrowVersion}"
     ]
 
     domainDependencies = [
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger         : "com.google.dagger:dagger:${daggerVersion}",
-            rxJava         : "io.reactivex:rxjava:${rxJavaVersion}",
+            rxJava         : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
             javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            arrow          : "com.fernandocejas:arrow:${arrowVersion}"
     ]
 
     dataDependencies = [
@@ -55,8 +58,8 @@ ext {
             dagger              : "com.google.dagger:dagger:${daggerVersion}",
             okHttp              : "com.squareup.okhttp:okhttp:${okHttpVersion}",
             gson                : "com.google.code.gson:gson:${gsonVersion}",
-            rxJava              : "io.reactivex:rxjava:${rxJavaVersion}",
-            rxAndroid           : "io.reactivex:rxandroid:${rxAndroidVersion}",
+            rxJava              : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid           : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
             javaxAnnotation     : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
             androidAnnotations  : "com.android.support:support-annotations:${androidAnnotationsVersion}"
     ]

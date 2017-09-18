@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Created by plnc on 2017-06-08.
@@ -24,7 +24,7 @@ public class UserDataRepository implements UserRepository {
     private final UserEntityDataMapper userEntityDataMapper;
 
     @Inject
-    public UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
+    UserDataRepository(UserDataStoreFactory userDataStoreFactory, UserEntityDataMapper userEntityDataMapper) {
         this.userDataStoreFactory = userDataStoreFactory;
         this.userEntityDataMapper = userEntityDataMapper;
     }

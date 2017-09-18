@@ -18,7 +18,7 @@ import javax.inject.Singleton;
 public class UserEntityDataMapper {
 
     @Inject
-    public UserEntityDataMapper() {
+    UserEntityDataMapper() {
     }
 
     public User transform(UserEntity userEntity) {
@@ -42,10 +42,9 @@ public class UserEntityDataMapper {
      * @return {@link User} if valid {@link UserEntity} otherwise null.
      */
     public List<User> transform(Collection<UserEntity> userEntityCollection) {
-        List<User> userList = new ArrayList<>(20);
-        User user;
+        final List<User> userList = new ArrayList<>(20);
         for(UserEntity userEntity : userEntityCollection) {
-            user = transform(userEntity);
+            final User user = transform(userEntity);
             if(user != null) {
                 userList.add(user);
             }

@@ -61,17 +61,4 @@ public class User {
     public void setFollowers(int followers) {
         this.followers = followers;
     }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("userId=").append(userId);
-        sb.append(", coverUrl='").append(coverUrl).append('\'');
-        sb.append(", fullName='").append(fullName).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", followers=").append(followers);
-        sb.append('}');
-        return sb.toString();
-    }
 }

@@ -13,7 +13,6 @@ repositories {
 
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.fernandocejas.frodo'
 
 android {
     defaultPublishConfig  "debug"
