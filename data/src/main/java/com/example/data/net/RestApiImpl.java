@@ -81,11 +81,11 @@ public class RestApiImpl implements RestApi {
     }
 
     private String getUserEntitiesFromApi() throws MalformedURLException {
-        return ApiConnection.createGet(RestApi.API_URL_GET_USER_LIST).requestSyncCall();
+        return ApiConnection.createGet(API_URL_GET_USER_LIST).requestSyncCall();
     }
 
     private String getUserDetailsFromApi(int userId) throws MalformedURLException {
-        String apiUrl = RestApi.API_URL_GET_USER_DETAILS + userId + ".json";
+        String apiUrl = API_URL_GET_USER_DETAILS + userId + ".json";
         return ApiConnection.createGet(apiUrl).requestSyncCall();
     }
     private boolean isThereInternetConnection() {

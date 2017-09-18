@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.fernandocejas.frodo:frodo-plugin:0.8.1'
+        classpath 'com.fernandocejas.frodo:frodo-plugin:0.8.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module dependencies.gradle.gradle files
     }
@@ -20,10 +20,5 @@ allprojects {
         androidVersionCode = 1
         androidVersionName = "1.0"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    task wrapper(type: Wrapper) {
-        description 'Creates the gradle wrapper'
-        gradleVersion '2.10'
     }
 }

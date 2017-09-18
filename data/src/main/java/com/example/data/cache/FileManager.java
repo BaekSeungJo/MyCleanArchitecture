@@ -21,26 +21,21 @@ import javax.inject.Singleton;
 public class FileManager {
 
     @Inject
-    public FileManager() {
-    }
+    FileManager() {}
 
-    public void writeToFile(File file, String fileContent) {
+    void writeToFile(File file, String fileContent) {
         if(!file.exists()) {
             try {
                 FileWriter writer = new FileWriter(file);
                 writer.write(fileContent);
                 writer.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-
             }
         }
     }
 
-    public String readFileContent(File file) {
+    String readFileContent(File file) {
         StringBuilder fileContentBuilder = new StringBuilder();
         if(file.exists()) {
             String strLine;
@@ -48,12 +43,10 @@ public class FileManager {
                 FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
                 while((strLine = bufferedReader.readLine()) != null) {
-                    fileContentBuilder.append(strLine + "\n");
+                    fileContentBuilder.append(strLine).append("\n");
                 }
                 bufferedReader.close();
                 fileReader.close();
-            } catch(FileNotFoundException e) {
-                e.printStackTrace();
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -62,24 +55,26 @@ public class FileManager {
         return fileContentBuilder.toString();
     }
 
-    public boolean exists(File file) { return file.exists(); }
+    boolean exists(File file) { return file.exists(); }
 
-    public void cleanDirectory(File directory) {
+    boolean cleanDirectory(File directory) {
+        boolean result = false;
         if(directory.exists()) {
             for(File file : directory.listFiles()) {
-                file.delete();
+                result = file.delete();
             }
         }
+        return result;
     }
 
-    public void writeToPreference(Context context, String preferenceFileName, String key, long value) {
+    void writeToPreference(Context context, String preferenceFileName, String key, long value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
         editor.apply();
     }
 
-    public long getFromPreference(Context context, String preferenceFileName, String key) {
+    long getFromPreference(Context context, String preferenceFileName, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
         return sharedPreferences.getLong(key, 0);
     }

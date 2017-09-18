@@ -1,6 +1,7 @@
 package com.example.data.repository.datasource;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.example.data.cache.UserCache;
 import com.example.data.entity.mapper.UserEntityJsonMapper;
@@ -21,7 +22,7 @@ public class UserDataStoreFactory {
     private final UserCache userCache;
 
     @Inject
-    public UserDataStoreFactory(Context context, UserCache userCache) {
+    public UserDataStoreFactory(@NonNull Context context, @NonNull UserCache userCache) {
         if(context == null || userCache == null) {
             throw new IllegalArgumentException("Constructor parameters cannot be null!!!");
         }

@@ -32,12 +32,12 @@ public class UserDataRepository implements UserRepository {
     @Override
     public Observable<List<User>> users() {
         final UserDataStore userDataStore = userDataStoreFactory.createCloudDataStore();
-        return userDataStore.userEntityList().map(userEntities -> userEntityDataMapper.transform(userEntities));
+        return userDataStore.userEntityList().map(this.userEntityDataMapper::transform);
     }
 
     @Override
     public Observable<User> user(int userId) {
         UserDataStore userDataStore = userDataStoreFactory.create(userId);
-        return userDataStore.userEntityDetails(userId).map(userEntity -> userEntityDataMapper.transform(userEntity));
+        return userDataStore.userEntityDetails(userId).map(this.userEntityDataMapper::transform);
     }
 }

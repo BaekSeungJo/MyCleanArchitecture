@@ -11,11 +11,11 @@ import rx.Observable;
  * Created by plnc on 2017-06-09.
  */
 
-public class DiskUserDataStore implements UserDataStore {
+class DiskUserDataStore implements UserDataStore {
 
     private final UserCache  userCache;
 
-    public DiskUserDataStore(UserCache userCache) {
+    DiskUserDataStore(UserCache userCache) {
         this.userCache = userCache;
     }
 

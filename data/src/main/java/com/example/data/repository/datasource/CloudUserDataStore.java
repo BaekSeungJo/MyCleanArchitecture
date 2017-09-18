@@ -12,7 +12,7 @@ import rx.functions.Action1;
 /**
  * Created by plnc on 2017-06-12.
  */
-public class CloudUserDataStore implements UserDataStore {
+class CloudUserDataStore implements UserDataStore {
 
     private final RestApi restApi;
     private final UserCache userCache;
@@ -23,7 +23,7 @@ public class CloudUserDataStore implements UserDataStore {
         }
     };
 
-    public CloudUserDataStore(RestApi restApi, UserCache userCache) {
+    CloudUserDataStore(RestApi restApi, UserCache userCache) {
         this.restApi = restApi;
         this.userCache = userCache;
     }
