@@ -7,8 +7,6 @@ import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.DefaultObserver;
 import com.example.domain.interactor.GetUserList;
-import com.example.domain.interactor.Params;
-import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
@@ -19,21 +17,19 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
- * Created by plnc on 2017-06-26.
+ * {@link Presenter} that controls communication between views and models of the presentation layer.
  */
-
 @PerActivity
 public class UserListPresenter implements Presenter {
 
     private UserListView viewListView;
-    private final UseCase getUserListUseCase;
+    private final GetUserList getUserListUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserListPresenter(@Named(GetUserList.NAME) UseCase getUserListUseCase,
+    public UserListPresenter(GetUserList getUserListUseCase,
                              UserModelDataMapper userModelDataMapper) {
         this.getUserListUseCase = getUserListUseCase;
         this.userModelDataMapper = userModelDataMapper;
@@ -55,7 +51,7 @@ public class UserListPresenter implements Presenter {
 
     @Override
     public void destroy() {
-        this.getUserListUseCase.unsubscribe();
+        this.getUserListUseCase.dispose();
         this.viewListView = null;
     }
 
@@ -100,25 +96,25 @@ public class UserListPresenter implements Presenter {
     }
 
     private void getUserList() {
-        this.getUserListUseCase.execute(new UserListObserver(), Params.EMPTY);
+        this.getUserListUseCase.execute(new UserListObserver(), null);
     }
 
     private final class UserListObserver extends DefaultObserver<List<User>> {
         @Override
-        public void onCompleted() {
-            UserListPresenter.this.hideViewLoading();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            UserListPresenter.this.hideViewLoading();
-            UserListPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
-            UserListPresenter.this.showViewRetry();
-        }
-
-        @Override
         public void onNext(List<User> users) {
             UserListPresenter.this.showUsersCollectionView(users);
+        }
+
+        @Override
+        public void onComplete() {
+            UserListPresenter.this.hideViewLoading();
+        }
+
+        @Override
+        public void onError(Throwable exception) {
+            UserListPresenter.this.hideViewLoading();
+            UserListPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) exception));
+            UserListPresenter.this.showViewRetry();
         }
     }
 }

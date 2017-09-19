@@ -7,8 +7,6 @@ import com.example.domain.exeception.DefaultErrorBundle;
 import com.example.domain.exeception.ErrorBundle;
 import com.example.domain.interactor.DefaultObserver;
 import com.example.domain.interactor.GetUserDetails;
-import com.example.domain.interactor.Params;
-import com.example.domain.interactor.UseCase;
 import com.example.presentation.exception.ErrorMessageFactory;
 import com.example.presentation.internal.di.PerActivity;
 import com.example.presentation.mapper.UserModelDataMapper;
@@ -16,7 +14,6 @@ import com.example.presentation.model.UserModel;
 import com.example.presentation.view.UserDetailsView;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by plnc on 2017-06-28.
@@ -26,11 +23,11 @@ import javax.inject.Named;
 public class UserDetailsPresenter implements Presenter {
 
     private UserDetailsView viewDetailsView;
-    private final UseCase getUserDetailsUseCase;
+    private final GetUserDetails getUserDetailsUseCase;
     private final UserModelDataMapper userModelDataMapper;
 
     @Inject
-    public UserDetailsPresenter(@Named(GetUserDetails.NAME) UseCase getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
+    public UserDetailsPresenter(GetUserDetails getUserDetailsUseCase, UserModelDataMapper userModelDataMapper) {
         this.getUserDetailsUseCase = getUserDetailsUseCase;
         this.userModelDataMapper = userModelDataMapper;
     }
@@ -51,7 +48,7 @@ public class UserDetailsPresenter implements Presenter {
 
     @Override
     public void destroy() {
-        this.getUserDetailsUseCase.unsubscribe();
+        this.getUserDetailsUseCase.dispose();
         this.viewDetailsView = null;
     }
 
@@ -88,27 +85,25 @@ public class UserDetailsPresenter implements Presenter {
     }
 
     private void getUserDetails(int userId) {
-        final Params params = Params.create();
-        params.putInt(GetUserDetails.PARAM_USER_ID_KEY, userId);
-        this.getUserDetailsUseCase.execute(new UserDetailsObserver(), params);
+        this.getUserDetailsUseCase.execute(new UserDetailsObserver(), GetUserDetails.Params.forUser(userId));
     }
 
     private final class UserDetailsObserver extends DefaultObserver<User> {
         @Override
-        public void onCompleted() {
-            UserDetailsPresenter.this.hideViewLoading();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            UserDetailsPresenter.this.hideViewLoading();
-            UserDetailsPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) e));
-            UserDetailsPresenter.this.showViewRetry();
-        }
-
-        @Override
         public void onNext(User user) {
             UserDetailsPresenter.this.showUserDetailsInView(user);
+        }
+
+        @Override
+        public void onComplete() {
+            UserDetailsPresenter.this.hideViewLoading();
+        }
+
+        @Override
+        public void onError(Throwable exception) {
+            UserDetailsPresenter.this.hideViewLoading();
+            UserDetailsPresenter.this.showErrorMessage(new DefaultErrorBundle((Exception) exception));
+            UserDetailsPresenter.this.showViewRetry();
         }
     }
 }

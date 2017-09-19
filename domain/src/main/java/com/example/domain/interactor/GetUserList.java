@@ -1,9 +1,12 @@
 package com.example.domain.interactor;
 
+import com.example.domain.User;
 import com.example.domain.executor.PostExecutionThread;
 import com.example.domain.executor.ThreadExecutor;
 import com.example.domain.repository.UserRepository;
 import com.fernandocejas.arrow.optional.Optional;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -13,9 +16,7 @@ import io.reactivex.Observable;
  * Created by plnc on 2017-05-31.
  */
 
-public class GetUserList extends UseCase {
-
-    public static final String NAME = "userList";
+public class GetUserList extends UseCase<List<User>, Void> {
 
     private final UserRepository userRepository;
 
@@ -38,7 +39,7 @@ public class GetUserList extends UseCase {
      * @return
      */
     @Override
-    protected Observable buildUseCaseObservable(Optional<Params> params) {
+    Observable<List<User>> buildUseCaseObservable(Void params) {
         return this.userRepository.users();
     }
 }

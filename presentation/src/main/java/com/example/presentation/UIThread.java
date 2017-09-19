@@ -1,18 +1,15 @@
 package com.example.presentation;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.example.domain.executor.PostExecutionThread;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by plnc on 2017-06-28.
+ * MainThread (UI Thread) implementation based on a {@link Scheduler}
  */
 @Singleton
 public class UIThread implements PostExecutionThread {

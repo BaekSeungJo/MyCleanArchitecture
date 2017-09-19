@@ -26,7 +26,7 @@ public class FileManager {
     void writeToFile(File file, String fileContent) {
         if(!file.exists()) {
             try {
-                FileWriter writer = new FileWriter(file);
+                final FileWriter writer = new FileWriter(file);
                 writer.write(fileContent);
                 writer.close();
             } catch (IOException e) {
@@ -36,12 +36,12 @@ public class FileManager {
     }
 
     String readFileContent(File file) {
-        StringBuilder fileContentBuilder = new StringBuilder();
+        final StringBuilder fileContentBuilder = new StringBuilder();
         if(file.exists()) {
             String strLine;
             try {
-                FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                final FileReader fileReader = new FileReader(file);
+                final BufferedReader bufferedReader = new BufferedReader(fileReader);
                 while((strLine = bufferedReader.readLine()) != null) {
                     fileContentBuilder.append(strLine).append("\n");
                 }
@@ -68,14 +68,14 @@ public class FileManager {
     }
 
     void writeToPreference(Context context, String preferenceFileName, String key, long value) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        final SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
         editor.apply();
     }
 
     long getFromPreference(Context context, String preferenceFileName, String key) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = context.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE);
         return sharedPreferences.getLong(key, 0);
     }
 }
